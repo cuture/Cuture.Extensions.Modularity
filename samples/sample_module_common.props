@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cuture.Extensions.Modularity\Cuture.Extensions.Modularity.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project>
+  <Import Project="../runable_tfm.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cuture.Extensions.Modularity\Cuture.Extensions.Modularity.csproj" />
+
+    <ProjectReference Include="..\SampleModule1\SampleModule1.csproj" />
+    <ProjectReference Include="..\SampleModule2\SampleModule2.csproj" />
+    <ProjectReference Include="..\SampleModule3\SampleModule3.csproj" />
+    <ProjectReference Include="..\SampleModule4\SampleModule4.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\SampleModule5\bin\$(ConfigurationName)\**\SampleModule5.???" Link="plugins\linked\%(RecursiveDir)\%(Filename)%(Extension)" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

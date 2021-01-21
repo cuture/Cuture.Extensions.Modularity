@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../sample_module_common.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\SampleModule4\SampleModule4.csproj" />
+  </ItemGroup>
+</Project>
