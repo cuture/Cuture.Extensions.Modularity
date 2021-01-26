@@ -11,6 +11,9 @@ namespace Cuture.Extensions.Modularity
     {
         #region Public 属性
 
+        /// <inheritdoc cref="ModuleLoadOptions"/>
+        public ModuleLoadOptions ModuleLoadOptions { get; }
+
         /// <summary>
         /// 模块源列表
         /// </summary>

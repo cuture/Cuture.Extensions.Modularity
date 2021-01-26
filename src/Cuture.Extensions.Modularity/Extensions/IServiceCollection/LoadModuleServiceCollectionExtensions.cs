@@ -173,10 +173,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services.GetSingletonServiceInstance<IModuleLoaderBuilder>() is IModuleLoaderBuilder moduleLoaderBuilder
                 && moduleLoaderBuilder != null)
             {
-                if (optionAction != null)
-                {
-                    throw new ModularityException($"{nameof(ModuleLoadOptions)} already set. cannot set it twice. please set it at first time when load module.");
-                }
+                optionAction?.Invoke(moduleLoaderBuilder.ModuleLoadOptions);
             }
             else
             {

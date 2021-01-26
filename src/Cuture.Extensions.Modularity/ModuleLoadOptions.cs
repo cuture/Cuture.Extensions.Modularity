@@ -1,4 +1,6 @@
-﻿namespace Cuture.Extensions.Modularity
+﻿using System.Collections.Generic;
+
+namespace Cuture.Extensions.Modularity
 {
     /// <summary>
     /// 模块加载选项
@@ -33,6 +35,11 @@
             }
             set => _bootstrapOptions = value;
         }
+
+        /// <summary>
+        /// <inheritdoc cref="IModulesBootstrapInterceptor"/>列表
+        /// </summary>
+        public List<IModulesBootstrapInterceptor> ModulesBootstrapInterceptors { get; } = new List<IModulesBootstrapInterceptor>();
 
         #endregion Public 属性
     }

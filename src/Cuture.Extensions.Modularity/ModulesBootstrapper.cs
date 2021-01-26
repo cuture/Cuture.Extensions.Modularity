@@ -16,6 +16,8 @@ namespace Cuture.Extensions.Modularity
     {
         #region Private 字段
 
+        private readonly IModulesBootstrapInterceptor _modulesBootstrapInterceptor;
+
         private readonly ModulesBootstrapOptions _options;
 
         #endregion Private 字段
@@ -35,14 +37,15 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc cref="ModulesBootstrapper"/>
         /// </summary>
         /// <param name="moduleInstances"></param>
+        /// <param name="modulesBootstrapInterceptor"></param>
         /// <param name="options"></param>
-        public ModulesBootstrapper(object[] moduleInstances, ModulesBootstrapOptions options)
+        public ModulesBootstrapper(object[] moduleInstances, IModulesBootstrapInterceptor modulesBootstrapInterceptor, ModulesBootstrapOptions options)
         {
             if (moduleInstances.IsNullOrEmpty())
             {
                 throw new ModularityException($"{nameof(moduleInstances)} cannot be null or empty.");
             }
-
+            _modulesBootstrapInterceptor = modulesBootstrapInterceptor ?? throw new ArgumentNullException(nameof(modulesBootstrapInterceptor));
             _options = options ?? throw new ArgumentNullException(nameof(options));
 
             Modules = moduleInstances.ToList().AsReadOnly();
@@ -62,41 +65,19 @@ namespace Cuture.Extensions.Modularity
 
             foreach (var module in Modules)
             {
-                if (module is IPreConfigureServices preConfigureServices)
-                {
-                    preConfigureServices.PreConfigureServices(context);
-                }
-                if (module is IPreConfigureServicesAsync preConfigureServicesAsync)
-                {
-                    await preConfigureServicesAsync.PreConfigureServicesAsync(context);
-                }
+                await PreConfigureModuleServicesAsync(context, module);
             }
 
             AutoRegisterModuleServicesContext autoRegisterContext = new(context.Services);
 
             foreach (var module in Modules)
             {
-                AutoRegisterModuleServices(module, autoRegisterContext);
-                if (module is IConfigureServices configureServices)
-                {
-                    configureServices.ConfigureServices(context);
-                }
-                if (module is IConfigureServicesAsync configureServicesAsync)
-                {
-                    await configureServicesAsync.ConfigureServicesAsync(context);
-                }
+                await ConfigureModuleServicesAsync(context, autoRegisterContext, module);
             }
 
             foreach (var module in Modules)
             {
-                if (module is IPostConfigureServices postConfigureServices)
-                {
-                    postConfigureServices.PostConfigureServices(context);
-                }
-                if (module is IPostConfigureServicesAsync postConfigureServicesAsync)
-                {
-                    await postConfigureServicesAsync.PostConfigureServicesAsync(context);
-                }
+                await PostConfigureModuleServicesAsync(context, module);
             }
         }
 
@@ -105,38 +86,17 @@ namespace Cuture.Extensions.Modularity
         {
             foreach (var module in Modules)
             {
-                if (module is IOnPreApplicationInitialization preApplicationInitialization)
-                {
-                    preApplicationInitialization.OnPreApplicationInitialization(context);
-                }
-                if (module is IOnPreApplicationInitializationAsync onPreApplicationInitializationAsync)
-                {
-                    await onPreApplicationInitializationAsync.OnPreApplicationInitializationAsync(context);
-                }
+                await OnPreApplicationInitializationAsync(context, module);
             }
 
             foreach (var module in Modules)
             {
-                if (module is IOnApplicationInitialization onApplicationInitialization)
-                {
-                    onApplicationInitialization.OnApplicationInitialization(context);
-                }
-                if (module is IOnApplicationInitializationAsync onApplicationInitializationAsync)
-                {
-                    await onApplicationInitializationAsync.OnApplicationInitializationAsync(context);
-                }
+                await OnApplicationInitializationAsync(context, module);
             }
 
             foreach (var module in Modules)
             {
-                if (module is IOnPostApplicationInitialization onPostApplicationInitialization)
-                {
-                    onPostApplicationInitialization.OnPostApplicationInitialization(context);
-                }
-                if (module is IOnPostApplicationInitializationAsync onPostApplicationInitializationAsync)
-                {
-                    await onPostApplicationInitializationAsync.OnPostApplicationInitializationAsync(context);
-                }
+                await OnPostApplicationInitializationAsync(context, module);
             }
         }
 
@@ -152,14 +112,7 @@ namespace Cuture.Extensions.Modularity
             {
                 var module = Modules[i];
 
-                if (module is IOnApplicationShutdown onApplicationShutdown)
-                {
-                    onApplicationShutdown.OnApplicationShutdown(context);
-                }
-                if (module is IOnApplicationShutdownAsync onApplicationShutdownAsync)
-                {
-                    await onApplicationShutdownAsync.OnApplicationShutdownAsync(context, token);
-                }
+                await OnApplicationShutdownAsync(context, module, token);
             }
         }
 
@@ -167,12 +120,108 @@ namespace Cuture.Extensions.Modularity
 
         #region Protected 方法
 
+        #region Lifecycle
+
+        /// <inheritdoc cref="IConfigureServices"/>
+        protected virtual async Task ConfigureModuleServicesAsync(ServiceConfigurationContext context, AutoRegisterModuleServicesContext autoRegisterContext, object module)
+        {
+            await AutoRegisterModuleServicesAsync(module, autoRegisterContext);
+            if (module is IConfigureServices configureServices)
+            {
+                configureServices.ConfigureServices(context);
+            }
+            if (module is IConfigureServicesAsync configureServicesAsync)
+            {
+                await configureServicesAsync.ConfigureServicesAsync(context);
+            }
+        }
+
+        /// <inheritdoc cref="IPostConfigureServices"/>
+        protected virtual async Task PostConfigureModuleServicesAsync(ServiceConfigurationContext context, object module)
+        {
+            if (module is IPostConfigureServices postConfigureServices)
+            {
+                postConfigureServices.PostConfigureServices(context);
+            }
+            if (module is IPostConfigureServicesAsync postConfigureServicesAsync)
+            {
+                await postConfigureServicesAsync.PostConfigureServicesAsync(context);
+            }
+        }
+
+        /// <inheritdoc cref="IPreConfigureServices"/>
+        protected virtual async Task PreConfigureModuleServicesAsync(ServiceConfigurationContext context, object module)
+        {
+            if (module is IPreConfigureServices preConfigureServices)
+            {
+                preConfigureServices.PreConfigureServices(context);
+            }
+            if (module is IPreConfigureServicesAsync preConfigureServicesAsync)
+            {
+                await preConfigureServicesAsync.PreConfigureServicesAsync(context);
+            }
+        }
+
+        /// <inheritdoc cref="IOnApplicationInitialization"/>
+        private static async Task OnApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        {
+            if (module is IOnApplicationInitialization onApplicationInitialization)
+            {
+                onApplicationInitialization.OnApplicationInitialization(context);
+            }
+            if (module is IOnApplicationInitializationAsync onApplicationInitializationAsync)
+            {
+                await onApplicationInitializationAsync.OnApplicationInitializationAsync(context);
+            }
+        }
+
+        /// <inheritdoc cref="IOnApplicationShutdown"/>
+        private static async Task OnApplicationShutdownAsync(ApplicationShutdownContext context, object module, CancellationToken token)
+        {
+            if (module is IOnApplicationShutdown onApplicationShutdown)
+            {
+                onApplicationShutdown.OnApplicationShutdown(context);
+            }
+            if (module is IOnApplicationShutdownAsync onApplicationShutdownAsync)
+            {
+                await onApplicationShutdownAsync.OnApplicationShutdownAsync(context, token);
+            }
+        }
+
+        /// <inheritdoc cref="IOnPostApplicationInitialization"/>
+        private static async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        {
+            if (module is IOnPostApplicationInitialization onPostApplicationInitialization)
+            {
+                onPostApplicationInitialization.OnPostApplicationInitialization(context);
+            }
+            if (module is IOnPostApplicationInitializationAsync onPostApplicationInitializationAsync)
+            {
+                await onPostApplicationInitializationAsync.OnPostApplicationInitializationAsync(context);
+            }
+        }
+
+        /// <inheritdoc cref="IOnPreApplicationInitialization"/>
+        private static async Task OnPreApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        {
+            if (module is IOnPreApplicationInitialization preApplicationInitialization)
+            {
+                preApplicationInitialization.OnPreApplicationInitialization(context);
+            }
+            if (module is IOnPreApplicationInitializationAsync onPreApplicationInitializationAsync)
+            {
+                await onPreApplicationInitializationAsync.OnPreApplicationInitializationAsync(context);
+            }
+        }
+
+        #endregion Lifecycle
+
         /// <summary>
         /// 自动注册模块所在程序集中导出的服务
         /// </summary>
         /// <param name="moduleInstance"></param>
         /// <param name="context"></param>
-        protected virtual void AutoRegisterModuleServices(object moduleInstance, AutoRegisterModuleServicesContext context)
+        protected virtual async Task AutoRegisterModuleServicesAsync(object moduleInstance, AutoRegisterModuleServicesContext context)
         {
             var moduleType = moduleInstance.GetType();
             if (!moduleType.ShouldRegisterServicesInAssembly())
@@ -182,6 +231,11 @@ namespace Cuture.Extensions.Modularity
             var assembly = moduleType.Assembly;
 
             if (context.ProcessedAssemblies.Contains(assembly))
+            {
+                return;
+            }
+
+            if (!await _modulesBootstrapInterceptor.RegisteringServicesInAssemblyAsync(context.Services, assembly))
             {
                 return;
             }

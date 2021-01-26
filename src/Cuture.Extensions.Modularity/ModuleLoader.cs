@@ -83,7 +83,9 @@ namespace Cuture.Extensions.Modularity
                 }
             }
 
-            return new ModulesBootstrapper(moduleInstances, _options.BootstrapOptions);
+            var modulesBootstrapInterceptor = new AggregatedModulesBootstrapInterceptor(_options.ModulesBootstrapInterceptors);
+
+            return new ModulesBootstrapper(moduleInstances, modulesBootstrapInterceptor, _options.BootstrapOptions);
         }
 
         #endregion Public 方法

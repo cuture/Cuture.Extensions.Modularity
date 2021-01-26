@@ -12,11 +12,13 @@ namespace Cuture.Extensions.Modularity
         #region Private 字段
 
         private readonly List<IModuleSource> _moduleSources = new List<IModuleSource>();
-        private readonly ModuleLoadOptions _options;
 
         #endregion Private 字段
 
         #region Public 属性
+
+        /// <inheritdoc/>
+        public ModuleLoadOptions ModuleLoadOptions { get; }
 
         /// <inheritdoc/>
         public IReadOnlyList<IModuleSource> ModuleSources => _moduleSources.AsReadOnly();
@@ -36,7 +38,7 @@ namespace Cuture.Extensions.Modularity
         public ModuleLoaderBuilder(IServiceCollection services, ModuleLoadOptions options)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ModuleLoadOptions = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         #endregion Public 构造函数
@@ -61,7 +63,7 @@ namespace Cuture.Extensions.Modularity
                 descriptorBuilder.AppendBuilder(source.DescriptorBuilder);
             }
 
-            return new ModuleLoader(Services, moduleTypes, descriptorBuilder, _options);
+            return new ModuleLoader(Services, moduleTypes, descriptorBuilder, ModuleLoadOptions);
         }
 
         #endregion Public 方法
