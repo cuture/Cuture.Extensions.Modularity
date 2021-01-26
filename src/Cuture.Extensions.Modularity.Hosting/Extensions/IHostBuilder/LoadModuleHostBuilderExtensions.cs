@@ -1,48 +1,16 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 using Cuture.Extensions.Modularity;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.Hosting
 {
     /// <summary>
-    /// Extensions for <see cref="IHostBuilder"/>
+    ///
     /// </summary>
-    public static class IHostBuilderExtensions
+    public static class LoadModuleHostBuilderExtensions
     {
-        #region Initialization
-
-        /// <summary>
-        /// 构建Host，并初始化模块
-        /// </summary>
-        /// <param name="hostBuilder"></param>
-        /// <returns></returns>
-        public static IHost InitializationModules(this IHostBuilder hostBuilder)
-        {
-            return hostBuilder.InitializationModulesAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// <inheritdoc cref="InitializationModules"/>
-        /// </summary>
-        /// <param name="hostBuilder"></param>
-        /// <returns></returns>
-        public static async Task<IHost> InitializationModulesAsync(this IHostBuilder hostBuilder)
-        {
-            var host = hostBuilder.Build();
-
-            await host.InitializationModulesAsync().ConfigureAwait(false);
-
-            return host;
-        }
-
-        #endregion Initialization
-
-        #region LoadModule
-
         #region Load
 
         /// <inheritdoc cref="IServiceCollectionExtensions.LoadModule{TModule}(IServiceCollection, Action{ModuleLoadOptions}?)"/>
@@ -128,8 +96,6 @@ namespace Microsoft.Extensions.Hosting
 
         #endregion File
 
-        #endregion LoadModule
-
         #region ModuleLoadComplete
 
         /// <summary>
@@ -143,19 +109,5 @@ namespace Microsoft.Extensions.Hosting
         }
 
         #endregion ModuleLoadComplete
-
-        #region Internal 方法
-
-        internal static IHostBuilder ConfigureServices(this IHostBuilder hostBuilder, Action<IServiceCollection> configureDelegate)
-        {
-            return hostBuilder.ConfigureServices((_, services) => configureDelegate(services));
-        }
-
-        internal static IHostBuilder InternalAddModuleSource(this IHostBuilder hostBuilder, IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction = null)
-        {
-            return hostBuilder.ConfigureServices(services => services.LoadModule(moduleSource, optionAction));
-        }
-
-        #endregion Internal 方法
     }
 }

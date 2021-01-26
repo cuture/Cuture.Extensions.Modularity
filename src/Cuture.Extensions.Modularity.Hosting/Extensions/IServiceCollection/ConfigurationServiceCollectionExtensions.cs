@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     ///
     /// </summary>
-    public static class HostingIServiceCollectionExtensions
+    public static class ConfigurationServiceCollectionExtensions
     {
         #region Public 方法
 

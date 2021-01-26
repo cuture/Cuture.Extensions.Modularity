@@ -9,9 +9,9 @@ using Microsoft.Extensions.Hosting;
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Extensions for <see cref="IServiceProvider"/>
+    ///
     /// </summary>
-    public static class IServiceProviderExtensions
+    public static class InitializationModulesServiceProviderExtensions
     {
         #region InitializationModules
 
@@ -94,7 +94,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (bootstrapper is null)
             {
-                throw new ModularityException($"must load modules first before initialization modules. please check module is loaded and {nameof(IHostBuilderExtensions.ModuleLoadComplete)} has been invoked.");
+                throw new ModularityException($"must load modules first before initialization modules. please check module is loaded and {nameof(IServiceCollectionExtensions.ModuleLoadComplete)} has been invoked.");
             }
 
             var applicationLifetime = serviceProvider.GetRequiredService<IHostApplicationLifetime>();
