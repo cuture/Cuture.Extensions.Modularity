@@ -1,10 +1,9 @@
 ﻿using System;
 
-using Cuture.Extensions.Modularity;
-
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace Microsoft.Extensions.Hosting
+namespace Cuture.Extensions.Modularity.Hosting
 {
     /// <summary>
     ///

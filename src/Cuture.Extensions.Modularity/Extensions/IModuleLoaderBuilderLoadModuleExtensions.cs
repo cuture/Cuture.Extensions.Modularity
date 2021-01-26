@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     /// Extensions for <see cref="IModuleLoaderBuilder"/>
     /// </summary>
-    public static class IModuleLoaderBuilderExtensions
+    public static class IModuleLoaderBuilderLoadModuleExtensions
     {
         #region LoadModule
 

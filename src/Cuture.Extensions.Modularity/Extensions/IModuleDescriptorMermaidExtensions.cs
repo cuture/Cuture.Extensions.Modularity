@@ -8,7 +8,7 @@ namespace Cuture.Extensions.Modularity
     /// <summary>
     ///
     /// </summary>
-    public static class IModuleDescriptorBuilderExtensions
+    public static class IModuleDescriptorMermaidExtensions
     {
         #region Mermaid
 

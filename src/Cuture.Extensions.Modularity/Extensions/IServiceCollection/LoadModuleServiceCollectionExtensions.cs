@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Cuture.Extensions.Modularity;
@@ -12,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     /// <summary>
     ///
     /// </summary>
-    public static class IServiceCollectionExtensions
+    public static class LoadModuleServiceCollectionExtensions
     {
         #region LoadModule
 
@@ -132,7 +130,7 @@ namespace Microsoft.Extensions.DependencyInjection
         #region ModuleLoadComplete
 
         /// <summary>
-        /// <inheritdoc cref="IModuleLoaderBuilderExtensions.ModuleLoadComplete(IModuleLoaderBuilder)"/>
+        /// <inheritdoc cref="IModuleLoaderBuilderLoadModuleExtensions.ModuleLoadComplete(IModuleLoaderBuilder)"/>
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -143,7 +141,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// <inheritdoc cref="IModuleLoaderBuilderExtensions.ModuleLoadCompleteAsync(IModuleLoaderBuilder)"/>
+        /// <inheritdoc cref="IModuleLoaderBuilderLoadModuleExtensions.ModuleLoadCompleteAsync(IModuleLoaderBuilder)"/>
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -155,161 +153,6 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         #endregion ModuleLoadComplete
-
-        #region ObjectAccessor
-
-        /// <summary>
-        /// 添加单例对象访问器
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IServiceCollection AddObjectAccessor<T>(this IServiceCollection services, T? value = null) where T : class => services.AddObjectAccessor<T>(ServiceLifetime.Singleton, value);
-
-        /// <summary>
-        /// 添加对象访问器
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="lifetime"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddObjectAccessor<T>(this IServiceCollection services, ServiceLifetime lifetime, T? value = null) where T : class
-        {
-            if (services.Any(service => service.ServiceType == typeof(ObjectAccessor<T>) && service.Lifetime == lifetime))
-            {
-                throw new Exception($"the same service ObjectAccessor<{typeof(T).FullName}> was already registered.");
-            }
-
-            var serviceDescriptor = lifetime switch
-            {
-                ServiceLifetime.Singleton => ServiceDescriptor.Singleton<ObjectAccessor<T>>(new ObjectAccessor<T>(value)),
-                ServiceLifetime.Scoped => ServiceDescriptor.Scoped<ObjectAccessor<T>>(_ => new ObjectAccessor<T>(value)),
-                _ => throw new ArgumentException($"ServiceLifetime: {lifetime} is a valueless value.", nameof(lifetime)),
-            };
-
-            services.Insert(0, serviceDescriptor);
-
-            return services;
-        }
-
-        /// <summary>
-        /// 获取对象访问器（必须为单例模式的注册类型）
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static ObjectAccessor<T> GetObjectAccessor<T>(this IServiceCollection services) where T : class
-        {
-            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(ObjectAccessor<T>));
-            if (serviceDescriptor is null
-                || serviceDescriptor.Lifetime != ServiceLifetime.Singleton)
-            {
-                throw new InvalidOperationException($"before get ObjectAccessor<{typeof(T).Name}> from ServiceCollection must regist as a singleton service.");
-            }
-            return (serviceDescriptor.ImplementationInstance as ObjectAccessor<T>)!;
-        }
-
-        /// <summary>
-        /// 获取对象访问器的值
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetObjectAccessorValue<T>(this IServiceCollection services) where T : class
-        {
-            return services.GetObjectAccessor<T>().Value;
-        }
-
-        /// <summary>
-        /// 移除已注册的对象访问器服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IServiceCollection RemoveObjectAccessor<T>(this IServiceCollection services) where T : class
-        {
-            return services.RemoveAll<ObjectAccessor<T>>();
-        }
-
-        /// <summary>
-        /// 移除对象访问器的值
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? RemoveObjectAccessorValue<T>(this IServiceCollection services) where T : class
-        {
-            var objectAccessor = services.GetObjectAccessor<T>();
-            var value = objectAccessor.Value;
-            objectAccessor.Value = null;
-            return value;
-        }
-
-        /// <summary>
-        /// 设置对象访问器的值
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetObjectAccessorValue<T>(this IServiceCollection services, T value) where T : class
-        {
-            services.GetObjectAccessor<T>().Value = value;
-        }
-
-        #endregion ObjectAccessor
-
-        #region GetSingletonServiceInstance
-
-        /// <summary>
-        /// 获取集合中单例服务的的实例，获取实例失败时抛出异常
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static T GetRequiredSingletonServiceInstance<T>(this IServiceCollection services) where T : class
-        {
-            return services.GetSingletonServiceInstance<T>()
-                    ?? throw new InvalidOperationException($"type of {typeof(T).FullName}'s singleton service instance not found in serviceCollection.");
-        }
-
-        /// <summary>
-        /// 获取集合中单例服务的的实例
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static T? GetSingletonServiceInstance<T>(this IServiceCollection services) where T : class
-        {
-            var serviceDescriptor = services.FirstOrDefault(t => t.ServiceType == typeof(T));
-
-            return serviceDescriptor?.ImplementationInstance as T;
-        }
-
-        #endregion GetSingletonServiceInstance
-
-        #region RemoveService
-
-        /// <summary>
-        /// 从服务集合中移除指定类型的服务
-        /// </summary>
-        /// <typeparam name="T">要移除的服务类型</typeparam>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static int Remove<T>(this IServiceCollection services) where T : class
-        {
-            var descriptors = services.Where(m => m.ServiceType == typeof(T)).ToArray();
-            return descriptors.Count(descriptor => services.Remove(descriptor));
-        }
-
-        #endregion RemoveService
 
         #region Internal
 

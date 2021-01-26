@@ -6,7 +6,7 @@ namespace Cuture.Extensions.Modularity
     /// <summary>
     ///
     /// </summary>
-    public static class IEnumerableExtensions
+    public static class IEnumerableSortByDependenciesExtensions
     {
         /* See: http://www.codeproject.com/Articles/869059/Topological-sorting-in-Csharp
          *      http://en.wikipedia.org/wiki/Topological_sorting

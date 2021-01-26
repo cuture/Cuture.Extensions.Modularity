@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Cuture.Extensions.Modularity;
+using Cuture.Extensions.Modularity.Hosting;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,13 +14,13 @@ namespace Microsoft.Extensions.Hosting
     {
         #region Load
 
-        /// <inheritdoc cref="IServiceCollectionExtensions.LoadModule{TModule}(IServiceCollection, Action{ModuleLoadOptions}?)"/>
+        /// <inheritdoc cref="LoadModuleServiceCollectionExtensions.LoadModule{TModule}(IServiceCollection, Action{ModuleLoadOptions}?)"/>
         public static IHostBuilder LoadModule<TModule>(this IHostBuilder hostBuilder, Action<ModuleLoadOptions>? optionAction = null) where TModule : IAppModule
         {
             return hostBuilder.InternalAddModuleSource(new TypeModuleSource(typeof(TModule)), optionAction);
         }
 
-        /// <inheritdoc cref="IServiceCollectionExtensions.LoadModule(IServiceCollection, IModuleSource, Action{ModuleLoadOptions}?)"/>
+        /// <inheritdoc cref="LoadModuleServiceCollectionExtensions.LoadModule(IServiceCollection, IModuleSource, Action{ModuleLoadOptions}?)"/>
         public static IHostBuilder LoadModule(this IHostBuilder hostBuilder, IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction = null)
         {
             return hostBuilder.InternalAddModuleSource(moduleSource, optionAction);
@@ -47,7 +48,7 @@ namespace Microsoft.Extensions.Hosting
             return hostBuilder.LoadModuleDirectory(sourceOptionAction, null, directories);
         }
 
-        /// <inheritdoc cref="IServiceCollectionExtensions.LoadModuleDirectory(IServiceCollection, Action{DirectoryModuleSource}?, Action{ModuleLoadOptions}?, string[])"/>
+        /// <inheritdoc cref="LoadModuleServiceCollectionExtensions.LoadModuleDirectory(IServiceCollection, Action{DirectoryModuleSource}?, Action{ModuleLoadOptions}?, string[])"/>
         public static IHostBuilder LoadModuleDirectory(this IHostBuilder hostBuilder, Action<DirectoryModuleSource>? sourceOptionAction, Action<ModuleLoadOptions>? optionAction, params string[] directories)
         {
             var source = new DirectoryModuleSource(directories);
@@ -79,7 +80,7 @@ namespace Microsoft.Extensions.Hosting
             return hostBuilder.LoadModuleFile(sourceOptionAction, null, files);
         }
 
-        /// <inheritdoc cref="IServiceCollectionExtensions.LoadModuleFile(IServiceCollection, Action{FileModuleSource}?, Action{ModuleLoadOptions}?, string[])"/>
+        /// <inheritdoc cref="LoadModuleServiceCollectionExtensions.LoadModuleFile(IServiceCollection, Action{FileModuleSource}?, Action{ModuleLoadOptions}?, string[])"/>
         public static IHostBuilder LoadModuleFile(this IHostBuilder hostBuilder, Action<FileModuleSource>? sourceOptionAction, Action<ModuleLoadOptions>? optionAction, params string[] files)
         {
             var source = new FileModuleSource(files);
