@@ -4,6 +4,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
+    
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
