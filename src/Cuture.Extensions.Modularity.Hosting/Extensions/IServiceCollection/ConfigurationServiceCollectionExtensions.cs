@@ -20,7 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
             var hostBuilderContext = services.GetSingletonServiceInstance<HostBuilderContext>();
 
             return hostBuilderContext?.Configuration as IConfigurationRoot
-                   ?? services.GetSingletonServiceInstance<IConfiguration>();
+                   ?? services.GetSingletonServiceInstance<IConfiguration>()
+                   ?? (services.TryGetObjectAccessorValue<IConfiguration>(out var configuration) ? configuration : null);
         }
 
         #endregion Public 方法

@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -47,14 +48,18 @@ namespace Cuture.Extensions.Modularity.Hosting
                 hostBuilder.Properties.Add(HostBuilderPropertiesKey, moduleSources);
 
                 moduleSources.Add(moduleSource);
-                hostBuilder.ConfigureServices(services =>
+                hostBuilder.ConfigureServices((context, services) =>
                 {
+                    services.AddObjectAccessor<IConfiguration>(context.Configuration);
+
                     foreach (var item in moduleSources)
                     {
                         services.LoadModule(item, optionAction);
                     }
 
                     services.ModuleLoadComplete();
+
+                    services.RemoveObjectAccessor<IConfiguration>();
                 });
             }
 

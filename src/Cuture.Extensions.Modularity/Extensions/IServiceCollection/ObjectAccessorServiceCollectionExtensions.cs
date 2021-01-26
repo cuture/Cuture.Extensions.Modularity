@@ -121,6 +121,90 @@ namespace Microsoft.Extensions.DependencyInjection
             services.GetObjectAccessor<T>().Value = value;
         }
 
+        #region try
+
+        /// <summary>
+        /// 获取对象访问器（必须为单例模式的注册类型）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="accessor"></param>
+        /// <returns></returns>
+        public static bool TryGetObjectAccessor<T>(this IServiceCollection services, out ObjectAccessor<T>? accessor) where T : class
+        {
+            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(ObjectAccessor<T>));
+            if (serviceDescriptor is null
+                || serviceDescriptor.Lifetime != ServiceLifetime.Singleton)
+            {
+                accessor = null;
+                return false;
+            }
+            accessor = serviceDescriptor.ImplementationInstance as ObjectAccessor<T>;
+            return accessor is not null;
+        }
+
+        /// <summary>
+        /// 获取对象访问器的值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryGetObjectAccessorValue<T>(this IServiceCollection services, out T? value) where T : class
+        {
+            if (services.TryGetObjectAccessor<T>(out var accessor)
+                && accessor is not null)
+            {
+                value = accessor.Value;
+                return true;
+            }
+            value = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 移除对象访问器的值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="removedValue"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryRemoveObjectAccessorValue<T>(this IServiceCollection services, out T? removedValue) where T : class
+        {
+            if (services.TryGetObjectAccessor<T>(out var accessor)
+                && accessor is not null)
+            {
+                removedValue = accessor.Value;
+                accessor.Value = null;
+                return true;
+            }
+            removedValue = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 设置对象访问器的值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TrySetObjectAccessorValue<T>(this IServiceCollection services, T value) where T : class
+        {
+            if (services.TryGetObjectAccessor<T>(out var accessor)
+                && accessor is not null)
+            {
+                accessor.Value = value;
+                return true;
+            }
+            return false;
+        }
+
+        #endregion try
+
         #endregion ObjectAccessor
     }
 }
