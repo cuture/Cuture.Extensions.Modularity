@@ -4,6 +4,8 @@
   <PropertyGroup>
     <Description>a library for modular develop with Microsoft.Extensions.Hosting.</Description>
 
+    <PackageTags>$(PackageTags) Host Hosting</PackageTags>
+
     <RootNamespace>Cuture.Extensions.Modularity</RootNamespace>
     <AssemblyName>Cuture.Extensions.Modularity.Hosting</AssemblyName>
   </PropertyGroup>

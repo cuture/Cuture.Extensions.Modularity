@@ -33,6 +33,8 @@
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <PackageVersion>$(VersionPrefix)-alpha0002</PackageVersion>
+
+    <PackageTags>Modularity Module DependencyInjection Extensions Framework</PackageTags>
   </PropertyGroup>
 
   <!--SourceLink-->
