@@ -17,8 +17,7 @@
     <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionPatch)</VersionPrefix>
 
-    <McrMajorVersion>5.0.0</McrMajorVersion>
-    <McrVersion>5.0.1</McrVersion>
+    <McrVersion>5.0.*</McrVersion>
   </PropertyGroup>
 
   <!--Package Info-->
@@ -32,7 +31,7 @@
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
-    <PackageVersion>$(VersionPrefix)-alpha0002</PackageVersion>
+    <PackageVersion>$(VersionPrefix)-alpha0003</PackageVersion>
 
     <PackageTags>Modularity Module DependencyInjection Extensions Framework</PackageTags>
   </PropertyGroup>

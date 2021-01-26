@@ -4,25 +4,25 @@ using System.Collections.Generic;
 namespace Cuture.Extensions.Modularity
 {
     /// <summary>
-    /// ģ��Դ
+    /// 模块源
     /// </summary>
     public interface IModuleSource
     {
-        #region Public ����
+        #region Public 属性
 
         /// <inheritdoc cref="IModuleDescriptorBuilder"/>
         IModuleDescriptorBuilder? DescriptorBuilder { get; }
 
-        #endregion Public ����
+        #endregion Public 属性
 
-        #region Public ����
+        #region Public 方法
 
         /// <summary>
-        /// ��ȡ����ģ��
+        /// 获取所有模块
         /// </summary>
         /// <returns></returns>
         IEnumerable<Type> GetModules();
 
-        #endregion Public ����
+        #endregion Public 方法
     }
 }

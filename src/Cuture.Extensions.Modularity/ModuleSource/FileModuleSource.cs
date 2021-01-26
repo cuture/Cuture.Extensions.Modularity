@@ -4,20 +4,20 @@ using System.Collections.Generic;
 namespace Cuture.Extensions.Modularity
 {
     /// <summary>
-    /// �����ļ��� <inheritdoc cref="IModuleSource"/>
+    /// 基于文件的 <inheritdoc cref="IModuleSource"/>
     /// </summary>
     public class FileModuleSource : FileModuleSourceBase
     {
-        #region Public ����
+        #region Public 属性
 
         /// <summary>
-        /// ԭʼģ���ļ�·���б�
+        /// 原始模块文件路径列表
         /// </summary>
         public IReadOnlyList<string> OriginFilePaths { get; }
 
-        #endregion Public ����
+        #endregion Public 属性
 
-        #region Public ���캯��
+        #region Public 构造函数
 
         /// <summary>
         /// <inheritdoc cref="FileModuleSource"/>
@@ -28,13 +28,13 @@ namespace Cuture.Extensions.Modularity
             OriginFilePaths = filePaths ?? Array.Empty<string>();
         }
 
-        #endregion Public ���캯��
+        #endregion Public 构造函数
 
-        #region Protected ����
+        #region Protected 方法
 
         /// <inheritdoc/>
         protected override IEnumerable<string> InternalGetFiles() => OriginFilePaths;
 
-        #endregion Protected ����
+        #endregion Protected 方法
     }
 }

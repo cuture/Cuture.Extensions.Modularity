@@ -31,7 +31,6 @@ namespace OtherModuleSystemAdaptSample
                 {
                     source.SearchDepth = 5;    //设置文件夹搜索深度
                 }, module5Directory)  //从文件夹加载
-                .ModuleLoadComplete()
                 .UseConsoleLifetime()
                 .InitializationModules()
                 .Run();

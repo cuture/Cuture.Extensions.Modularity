@@ -6,44 +6,44 @@ using System.Linq;
 namespace Cuture.Extensions.Modularity
 {
     /// <summary>
-    /// ����Ŀ¼�� <inheritdoc cref="IModuleSource"/>
+    /// 基于目录的 <inheritdoc cref="IModuleSource"/>
     /// </summary>
     public class DirectoryModuleSource : FileModuleSourceBase
     {
-        #region Public �ֶ�
+        #region Public 字段
 
         /// <summary>
-        /// ����������
+        /// 最大搜索深度
         /// </summary>
         public const int MaxSearchDepth = 16;
 
         /// <summary>
-        /// ��С�������
+        /// 最小搜索深度
         /// </summary>
         public const int MinSearchDepth = 0;
 
-        #endregion Public �ֶ�
+        #endregion Public 字段
 
-        #region Private �ֶ�
+        #region Private 字段
 
         private int _searchDepth = MinSearchDepth;
 
-        #endregion Private �ֶ�
+        #endregion Private 字段
 
-        #region Public ����
+        #region Public 属性
 
         /// <summary>
-        /// Ŀ¼ɸѡί��
+        /// 目录筛选委托
         /// </summary>
         public Func<string, bool>? DirectoryFilter { get; set; }
 
         /// <summary>
-        /// ԭʼ��Ŀ¼
+        /// 原始的目录
         /// </summary>
         public IReadOnlyList<string> OriginDirectories { get; }
 
         /// <summary>
-        /// �������
+        /// 搜索深度
         /// </summary>
         public int SearchDepth
         {
@@ -58,22 +58,22 @@ namespace Cuture.Extensions.Modularity
             }
         }
 
-        #endregion Public ����
+        #endregion Public 属性
 
-        #region Public ���캯��
+        #region Public 构造函数
 
         /// <summary>
         /// <inheritdoc cref="DirectoryModuleSource"/>
         /// </summary>
-        /// <param name="directories">Ŀ¼</param>
+        /// <param name="directories">目录</param>
         public DirectoryModuleSource(params string[] directories)
         {
             OriginDirectories = directories ?? Array.Empty<string>();
         }
 
-        #endregion Public ���캯��
+        #endregion Public 构造函数
 
-        #region Protected ����
+        #region Protected 方法
 
         /// <inheritdoc/>
         protected override IEnumerable<string> InternalGetFiles()
@@ -82,7 +82,7 @@ namespace Cuture.Extensions.Modularity
         }
 
         /// <summary>
-        /// ����Ŀ¼�µĳ����ļ�
+        /// 查找目录下的程序集文件
         /// </summary>
         /// <param name="directory"></param>
         /// <returns></returns>
@@ -95,7 +95,7 @@ namespace Cuture.Extensions.Modularity
         }
 
         /// <summary>
-        /// ������Ч���ļ���
+        /// 查找有效的文件夹
         /// </summary>
         /// <param name="directory"></param>
         /// <param name="searchDepth"></param>
@@ -130,6 +130,6 @@ namespace Cuture.Extensions.Modularity
             return allDirectories;
         }
 
-        #endregion Protected ����
+        #endregion Protected 方法
     }
 }

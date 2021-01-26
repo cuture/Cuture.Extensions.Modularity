@@ -22,11 +22,6 @@ namespace Microsoft.Extensions.Hosting
         /// <inheritdoc cref="IServiceCollectionExtensions.LoadModule(IServiceCollection, IModuleSource, Action{ModuleLoadOptions}?)"/>
         public static IHostBuilder LoadModule(this IHostBuilder hostBuilder, IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction = null)
         {
-            if (moduleSource is null)
-            {
-                throw new ArgumentNullException(nameof(moduleSource));
-            }
-
             return hostBuilder.InternalAddModuleSource(moduleSource, optionAction);
         }
 
@@ -95,19 +90,5 @@ namespace Microsoft.Extensions.Hosting
         }
 
         #endregion File
-
-        #region ModuleLoadComplete
-
-        /// <summary>
-        /// <inheritdoc cref="IModuleLoaderBuilderExtensions.ModuleLoadComplete(IModuleLoaderBuilder)"/>
-        /// </summary>
-        /// <param name="hostBuilder"></param>
-        /// <returns></returns>
-        public static IHostBuilder ModuleLoadComplete(this IHostBuilder hostBuilder)
-        {
-            return hostBuilder.ConfigureServices(services => services.ModuleLoadComplete());
-        }
-
-        #endregion ModuleLoadComplete
     }
 }

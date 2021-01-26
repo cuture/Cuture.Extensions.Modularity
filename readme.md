@@ -91,7 +91,6 @@ Host.CreateDefaultBuilder(args)
     {
         source.SearchDepth = 5;    //设置文件夹搜索深度
     }, moduleDirectory)  //从文件夹加载
-    .ModuleLoadComplete()   //必须调用此方法，以确认模块加载完成
     .UseConsoleLifetime()
     .InitializationModules()    //必须调用此方法，以初始化模块
     .Run();
