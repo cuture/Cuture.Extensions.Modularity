@@ -29,8 +29,8 @@ namespace Cuture.Extensions.Modularity
         /// 将模块源添加到构建集合中
         /// </summary>
         /// <param name="moduleSource"></param>
-        /// <param name=""></param>
-        public void Add(IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction)
+        /// <param name="optionAction">配置选项的委托</param>
+        public void Add(IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction = null)
         {
             _moduleSources.Add(new KeyValuePair<IModuleSource, Action<ModuleLoadOptions>?>(moduleSource, optionAction));
         }

@@ -29,7 +29,7 @@ namespace SampleModule2
 
         public string SayHello()
         {
-            return $"Hello. Options.Conetnt:{_helloOptions.Content} Options2.Conetnt:{_helloOptions2.Content}。这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
+            return $"Hello. 【Options:{_helloOptions.Content}】【Options2:{_helloOptions2.Content}】。这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
         }
 
         public async Task InitAsync()

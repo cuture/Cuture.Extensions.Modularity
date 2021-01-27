@@ -1,4 +1,6 @@
-﻿using Cuture.Extensions.Modularity;
+﻿using System;
+
+using Cuture.Extensions.Modularity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -9,12 +11,12 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         #region Public 方法
 
-        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder)"/>
-        public static IServiceCollection AutoBindModuleOptions(this IServiceCollection services)
+        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsAutoBindOptions}?)"/>
+        public static IServiceCollection AutoBindModuleOptions(this IServiceCollection services, Action<OptionsAutoBindOptions>? optionAction = null)
         {
             var moduleLoaderBuilder = services.GetRequiredSingletonServiceInstance<IModuleLoaderBuilder>();
 
-            moduleLoaderBuilder.AutoBindModuleOptions();
+            moduleLoaderBuilder.AutoBindModuleOptions(optionAction);
 
             return services;
         }

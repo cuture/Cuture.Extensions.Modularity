@@ -16,6 +16,7 @@ namespace Cuture.Extensions.Modularity
     {
         #region Private 字段
 
+        private readonly OptionsAutoBindOptions _options;
         private readonly Type _optionsBaseType = typeof(IOptions<object>);
         private readonly MethodInfo _optionsExtensionMethod;
 
@@ -24,8 +25,9 @@ namespace Cuture.Extensions.Modularity
         #region Public 构造函数
 
         /// <inheritdoc cref="OptionsAutoBindModulesBootstrapInterceptor"/>
-        public OptionsAutoBindModulesBootstrapInterceptor()
+        public OptionsAutoBindModulesBootstrapInterceptor(OptionsAutoBindOptions options)
         {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
             _optionsExtensionMethod = typeof(OptionsConfigurationServiceCollectionExtensions).GetMethod("Configure", new[] { typeof(IServiceCollection), typeof(IConfiguration) })!;
         }
 
@@ -75,13 +77,32 @@ namespace Cuture.Extensions.Modularity
 
         #region Protected 方法
 
+        /// <summary>
+        /// 获取Options的配置节点
+        /// </summary>
+        /// <param name="optionsType"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         protected virtual IConfiguration GetOptionsConfiguretionSection(Type optionsType, IConfiguration configuration)
         {
-            if (optionsType.FullName is null)
+            string path;
+            if (_options.UseFullNamespaceAsPath)
             {
-                throw new ModularityException($"there is no namespace founded with option type {optionsType}.cannot auto bind it.");
+                if (optionsType.FullName is null)
+                {
+                    throw new ModularityException($"there is no namespace founded with option type {optionsType}.cannot auto bind it.");
+                }
+                path = optionsType.FullName.Replace('.', ':');
             }
-            var path = optionsType.FullName.Replace('.', ':');
+            else
+            {
+                path = optionsType.Name;
+            }
+
+            if (!string.IsNullOrEmpty(_options.PathPrefix))
+            {
+                path = $"{_options.PathPrefix}:{path}";
+            }
 
             return configuration.GetSection(path);
         }

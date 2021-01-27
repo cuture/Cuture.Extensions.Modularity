@@ -27,10 +27,13 @@ namespace DirectUseDIContainerSample
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build())
                     .LoadModule<DIContainerSampleModule>()
                     .AddModuleFile(module3Path) //从文件加载
-                    .AddModuleDirectory(source =>
+                    .AddModuleDirectory(source =>   //从文件夹加载
                     {
                         source.SearchDepth = 5;    //设置文件夹搜索深度
-                    }, module5Directory)  //从文件夹加载
+                    }, module5Directory)
+                    //.AutoBindModuleOptions(options => options.UseFullNamespaceAsPath = false)
+                    //.AutoBindModuleOptions(options => options.PathPrefix = "Prefixed:CFG")
+                    //.AutoBindModuleOptions(options => { options.UseFullNamespaceAsPath = false; options.PathPrefix = "Prefixed:CFG"; })
                     .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
                     .ModuleLoadComplete();
 
