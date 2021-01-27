@@ -8,7 +8,7 @@
 - 基本和[Abp](https://github.com/abpframework/abp)的模块实现方法相同；
 - 可拓展的模块加载源，已实现基于`Type`、`Assembly`、`File`、`Directory`的模块加载；
 - 可集成其它模块系统的模块（如Abp），详见示例代码；
-- 极简的依赖，主项目只依赖`Microsoft.Extensions.DependencyInjection.Abstractions`，Hosting项目额外依赖`Microsoft.Extensions.Hosting.Abstractions`；
+- 主项目只依赖`Microsoft.Extensions.DependencyInjection.Abstractions`，Hosting项目额外依赖`Hosting.Abstractions`、`Configuration.Binder`、`Options`；
 - Mermaid生成工具，方便查看模块依赖关系；
 
 ### Nuget包列表

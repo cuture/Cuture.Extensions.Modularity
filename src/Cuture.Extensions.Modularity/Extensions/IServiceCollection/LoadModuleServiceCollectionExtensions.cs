@@ -154,6 +154,21 @@ namespace Microsoft.Extensions.DependencyInjection
 
         #endregion ModuleLoadComplete
 
+        #region Option
+
+        /// <summary>
+        /// 配置ModuleLoadBuilder选项
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="optionAction"></param>
+        /// <returns></returns>
+        public static IModuleLoaderBuilder OptionModuleLoadBuilder(this IServiceCollection services, Action<ModuleLoadOptions> optionAction)
+        {
+            return services.InternalGetOrInitModuleLoadBuilder(optionAction);
+        }
+
+        #endregion Option
+
         #region Internal
 
         internal static IModuleLoaderBuilder InternalAddModuleSource(this IServiceCollection services, IModuleSource moduleSource, Action<ModuleLoadOptions>? optionAction = null)

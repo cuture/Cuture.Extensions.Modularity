@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 using Cuture.Extensions.Modularity;
 
+using Microsoft.Extensions.Options;
+
+using SampleModule2.Options.Hellos;
+
 using SampleModule4;
 
 namespace SampleModule2
@@ -14,10 +18,18 @@ namespace SampleModule2
     public class Module2Helloable : IHelloable
     {
         private string _assemblyName;
+        private readonly HelloOptions _helloOptions;
+        private readonly HelloOptions2 _helloOptions2;
+
+        public Module2Helloable(IOptions<HelloOptions> helloOptions, IOptions<HelloOptions2> helloOptions2)
+        {
+            _helloOptions = helloOptions.Value;
+            _helloOptions2 = helloOptions2.Value;
+        }
 
         public string SayHello()
         {
-            return $"Hello 这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
+            return $"Hello. Options.Conetnt:{_helloOptions.Content} Options2.Conetnt:{_helloOptions2.Content}。这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
         }
 
         public async Task InitAsync()

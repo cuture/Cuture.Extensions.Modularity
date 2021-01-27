@@ -4,7 +4,13 @@ using System;
 using System.IO;
 using System.Threading;
 
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using SampleModule2;
+
+using SampleModule4;
 
 namespace DirectUseDIContainerSample
 {
@@ -18,12 +24,14 @@ namespace DirectUseDIContainerSample
             var services = new ServiceCollection();
 
             //加载模块
-            services.LoadModule<DIContainerSampleModule>()
+            services.AddSingleton<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build())
+                    .LoadModule<DIContainerSampleModule>()
                     .AddModuleFile(module3Path) //从文件加载
                     .AddModuleDirectory(source =>
                     {
                         source.SearchDepth = 5;    //设置文件夹搜索深度
                     }, module5Directory)  //从文件夹加载
+                    .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
                     .ModuleLoadComplete();
 
             using (var serviceProvider = services.BuildServiceProvider())
@@ -31,11 +39,24 @@ namespace DirectUseDIContainerSample
                 //初始化模块
                 serviceProvider.InitializationModulesWithOutHostLifetime();
 
-                //这里使用初始化了模块的serviceProvider
-                Console.WriteLine("使用初始化了模块的serviceProvider");
-                Thread.Sleep(2000);
+                for (int i = 0; i < 3; i++)
+                {
+                    Console.WriteLine($"------------- {i} -------------");
+                    using (var serviceScope = serviceProvider.CreateScope())
+                    {
+                        var accessCounter = serviceScope.ServiceProvider.GetRequiredService<IAccessCounter>();
+                        accessCounter.Add();
 
-                Console.WriteLine("\r\n使用结束，关闭模块");
+                        Console.WriteLine($"hello: {serviceScope.ServiceProvider.GetRequiredService<IHelloable>().SayHello()}");
+                        Console.WriteLine($"accessCount: {accessCounter.Count}");
+                        Console.WriteLine($"scopedRandom1: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
+                        Console.WriteLine($"scopedRandom2: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
+                        Console.WriteLine($"random1: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
+                        Console.WriteLine($"random3: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
+                    }
+                    Console.WriteLine("\r\n");
+                }
+
                 //关闭模块
                 serviceProvider.ShutdownModules();
             }

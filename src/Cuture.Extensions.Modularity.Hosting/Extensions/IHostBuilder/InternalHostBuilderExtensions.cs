@@ -13,7 +13,7 @@ namespace Cuture.Extensions.Modularity.Hosting
     {
         #region Public 字段
 
-        public const string HostBuilderPropertiesKey = "Cuture.Extensions.Modularity.Hosting.ModuleSources";
+        public const string HostBuilderPropertiesKey = "Cuture.Extensions.Modularity.Hosting.ModuleLoadContext";
 
         #endregion Public 字段
 
@@ -31,11 +31,11 @@ namespace Cuture.Extensions.Modularity.Hosting
                 throw new ArgumentNullException(nameof(moduleSource));
             }
 
-            if (hostBuilder.Properties.TryGetValue(HostBuilderPropertiesKey, out var storedModuleSources))
+            if (hostBuilder.Properties.TryGetValue(HostBuilderPropertiesKey, out var storedLoadContext))
             {
-                if (storedModuleSources is HostBuilderModuleSourceCollection moduleSources)
+                if (storedLoadContext is HostBuilderModuleLoadContext loadContext)
                 {
-                    moduleSources.Add(moduleSource);
+                    loadContext.Add(moduleSource, optionAction);
                 }
                 else
                 {
@@ -44,17 +44,22 @@ namespace Cuture.Extensions.Modularity.Hosting
             }
             else
             {
-                var moduleSources = new HostBuilderModuleSourceCollection();
-                hostBuilder.Properties.Add(HostBuilderPropertiesKey, moduleSources);
+                var loadContext = new HostBuilderModuleLoadContext();
+                hostBuilder.Properties.Add(HostBuilderPropertiesKey, loadContext);
+                loadContext.Add(moduleSource, optionAction);
 
-                moduleSources.Add(moduleSource);
                 hostBuilder.ConfigureServices((context, services) =>
                 {
                     services.AddObjectAccessor<IConfiguration>(context.Configuration);
 
-                    foreach (var item in moduleSources)
+                    foreach (var item in loadContext.ModuleSources)
                     {
-                        services.LoadModule(item, optionAction);
+                        services.LoadModule(item.Key, item.Value);
+                    }
+
+                    foreach (var item in loadContext.OptionActions)
+                    {
+                        services.OptionModuleLoadBuilder(item);
                     }
 
                     services.ModuleLoadComplete();
@@ -63,6 +68,27 @@ namespace Cuture.Extensions.Modularity.Hosting
                 });
             }
 
+            return hostBuilder;
+        }
+
+        internal static IHostBuilder InternalOptionModuleLoadBuilder(this IHostBuilder hostBuilder, Action<ModuleLoadOptions> optionAction)
+        {
+            if (optionAction is null)
+            {
+                throw new ArgumentNullException(nameof(optionAction));
+            }
+
+            if (hostBuilder.Properties.TryGetValue(HostBuilderPropertiesKey, out var storedLoadContext))
+            {
+                if (storedLoadContext is HostBuilderModuleLoadContext loadContext)
+                {
+                    loadContext.Option(optionAction);
+                }
+                else
+                {
+                    throw new ModularityException($"The key '{HostBuilderPropertiesKey}' stored in {nameof(IHostBuilder)}.{nameof(IHostBuilder.Properties)} is invalid. Don't change it.");
+                }
+            }
             return hostBuilder;
         }
 

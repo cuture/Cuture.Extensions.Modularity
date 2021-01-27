@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -17,12 +18,14 @@ namespace UseHostSample
 
             //直接在HostBuilder加载，或者使用ConfigureServices进行加载
             Host.CreateDefaultBuilder(args)
+                .ConfigureHostConfiguration(builder => builder.AddJsonFile("appsettings.Development.json"))
                 .LoadModule<HostSampleModule>()
                 .LoadModuleFile(module3Path) //从文件加载
                 .LoadModuleDirectory(source =>
                 {
                     source.SearchDepth = 5;    //设置文件夹搜索深度
                 }, module5Directory)  //从文件夹加载
+                .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
                 .UseConsoleLifetime()
                 .InitializationModules()
                 .Run();

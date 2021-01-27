@@ -2,10 +2,17 @@
   <Import Project="../sample_host_commom.props" />
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cuture.Extensions.Modularity.Hosting\Cuture.Extensions.Modularity.Hosting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\WebApiHostSample\appsettings.Development.json" Link="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
