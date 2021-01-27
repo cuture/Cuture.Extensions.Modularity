@@ -7,6 +7,7 @@
 - 支持基于特性标注的服务自动注入（默认不支持基于继承的服务自动注入）；
 - 基本和[Abp](https://github.com/abpframework/abp)的模块实现方法相同；
 - 可拓展的模块加载源，已实现基于`Type`、`Assembly`、`File`、`Directory`的模块加载；
+- `IOptions<TOptions>`自动绑定；
 - 可集成其它模块系统的模块（如Abp），详见示例代码；
 - 主项目只依赖`Microsoft.Extensions.DependencyInjection.Abstractions`，Hosting项目额外依赖`Hosting.Abstractions`、`Configuration.Binder`、`Options`；
 - Mermaid生成工具，方便查看模块依赖关系；
@@ -122,7 +123,26 @@ public class Hello : IHello
 
 除示例的`ExportServices`外，还有`ExportSingletonServices`、`ExportScopedServices`、`ExportTransientServices`等多个拓展特性的重载实现；
 
-## 4. 集成其它模块系统的模块
+## `IOptions<TOptions>`自动绑定
+ - 自动查找标记了`AutoRegisterServicesInAssemblyAttribute`的模块中继承了`IOptions<TOptions>`的类；
+ - 使用其完整名称为路径，在`IConfiguration`查找节点，并绑定值；
+ - 如 `A` 类命名空间为 `B.C.D.E.F` ，则`IConfiguration`查找路径为 `B:C:D:E:F:A`；
+ - Note: 构建过程中必须有可访问的`IConfiguration` !!! 详见示例项目；
+
+示例配置代码:
+
+ - 在构建中调用 `AutoBindModuleOptions()` 方法即可；
+```C#
+Host.CreateDefaultBuilder(args)
+    .ConfigureHostConfiguration(builder => builder.AddJsonFile("appsettings.Development.json"))
+    .LoadModule<HostSampleModule>()
+    .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
+    .UseConsoleLifetime()
+    .InitializationModules()
+    .Run();
+```
+
+## 集成其它模块系统的模块
 
 参考示例项目`OtherModuleSystemAdaptSample`
 
