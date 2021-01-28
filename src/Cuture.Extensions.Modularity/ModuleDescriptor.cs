@@ -4,19 +4,17 @@ using System.Linq;
 
 namespace Cuture.Extensions.Modularity
 {
-    /// <summary>
-    /// ģ������
-    /// </summary>
+    /// <inheritdoc cref="IModuleDescriptor"/>
     public class ModuleDescriptor : IModuleDescriptor
     {
-        #region Private �ֶ�
+        #region Private 字段
 
         private List<IModuleDescriptor> _dependencies = new List<IModuleDescriptor>();
         private List<IModuleDescriptor> _dependents = new List<IModuleDescriptor>();
 
-        #endregion Private �ֶ�
+        #endregion Private 字段
 
-        #region Public ����
+        #region Public 属性
 
         /// <inheritdoc/>
         public virtual IReadOnlyList<IModuleDescriptor> Dependencies { get => _dependencies; protected set => _dependencies = value.ToList(); }
@@ -27,14 +25,14 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc/>
         public virtual Type Type { get; protected set; }
 
-        #endregion Public ����
+        #endregion Public 属性
 
-        #region Public ���캯��
+        #region Public 构造函数
 
         /// <summary>
         /// <inheritdoc cref="ModuleDescriptor"/>
         /// </summary>
-        /// <param name="moduleType">ģ������</param>
+        /// <param name="moduleType">模块类型</param>
         public ModuleDescriptor(Type moduleType)
         {
             Type = moduleType ?? throw new ArgumentNullException(nameof(moduleType));
@@ -43,17 +41,17 @@ namespace Cuture.Extensions.Modularity
         /// <summary>
         /// <inheritdoc cref="ModuleDescriptor"/>
         /// </summary>
-        /// <param name="moduleType">ģ������</param>
-        /// <param name="dependencies">������ģ��</param>
+        /// <param name="moduleType">模块类型</param>
+        /// <param name="dependencies">依赖的模块</param>
         public ModuleDescriptor(Type? moduleType, params IModuleDescriptor[] dependencies)
         {
             Type = moduleType ?? throw new ArgumentNullException(nameof(moduleType));
             Dependencies = dependencies ?? Array.Empty<ModuleDescriptor>();
         }
 
-        #endregion Public ���캯��
+        #endregion Public 构造函数
 
-        #region Public ����
+        #region Public 方法
 
         /// <inheritdoc/>
         public IModuleDescriptor AddDependencies(IEnumerable<IModuleDescriptor> moduleDescriptors)
@@ -120,6 +118,6 @@ namespace Cuture.Extensions.Modularity
 
         #endregion Compare
 
-        #endregion Public ����
+        #endregion Public 方法
     }
 }

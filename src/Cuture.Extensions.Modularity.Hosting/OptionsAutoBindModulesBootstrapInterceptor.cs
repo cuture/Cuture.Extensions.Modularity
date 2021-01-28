@@ -99,6 +99,14 @@ namespace Cuture.Extensions.Modularity
                 path = optionsType.Name;
             }
 
+            if (_options.RemoveOptionsSuffix
+                && path.EndsWith("Options", StringComparison.OrdinalIgnoreCase))
+            {
+#pragma warning disable IDE0057 // 使用范围运算符
+                path = path.Substring(0, path.Length - 7);
+#pragma warning restore IDE0057 // 使用范围运算符
+            }
+
             if (!string.IsNullOrEmpty(_options.PathPrefix))
             {
                 path = $"{_options.PathPrefix}:{path}";

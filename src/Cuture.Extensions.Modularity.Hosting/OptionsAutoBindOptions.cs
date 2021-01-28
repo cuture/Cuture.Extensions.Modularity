@@ -21,6 +21,11 @@ namespace Cuture.Extensions.Modularity
         public string? PathPrefix { get => _pathPrefix; set => _pathPrefix = value?.TrimEnd(':'); }
 
         /// <summary>
+        /// 移除名称中的`Options`后缀
+        /// </summary>
+        public bool RemoveOptionsSuffix { get; set; } = false;
+
+        /// <summary>
         /// 是否使用完整命名空间作为配置路径
         /// <para/>
         /// 当值为 true 时：
