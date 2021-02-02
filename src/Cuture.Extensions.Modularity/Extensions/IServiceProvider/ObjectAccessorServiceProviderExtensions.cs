@@ -19,9 +19,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ObjectAccessor<T> GetObjectAccessor<T>(this IServiceProvider serviceProvider) where T : class
+        public static IObjectAccessor<T> GetObjectAccessor<T>(this IServiceProvider serviceProvider) where T : class
         {
-            return serviceProvider.GetRequiredService<ObjectAccessor<T>>();
+            return serviceProvider.GetRequiredService<IObjectAccessor<T>>();
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetObjectAccessorValue<T>(this IServiceProvider serviceProvider) where T : class
         {
-            return serviceProvider.GetRequiredService<ObjectAccessor<T>>().Value;
+            return serviceProvider.GetRequiredService<IObjectAccessor<T>>().Value;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? RemoveObjectAccessorValue<T>(this IServiceProvider serviceProvider) where T : class
         {
-            var accessor = serviceProvider.GetRequiredService<ObjectAccessor<T>>();
+            var accessor = serviceProvider.GetRequiredService<IObjectAccessor<T>>();
             if (accessor != null)
             {
                 var value = accessor.Value;
@@ -65,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetObjectAccessorValue<T>(this IServiceProvider serviceProvider, T value) where T : class
         {
-            serviceProvider.GetRequiredService<ObjectAccessor<T>>().Value = value;
+            serviceProvider.GetRequiredService<IObjectAccessor<T>>().Value = value;
         }
 
         #endregion ObjectAccessor

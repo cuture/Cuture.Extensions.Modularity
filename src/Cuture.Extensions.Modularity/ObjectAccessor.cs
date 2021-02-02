@@ -6,7 +6,20 @@ namespace Cuture.Extensions.Modularity
     /// 对象访问器
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObjectAccessor<T> : IDisposable where T : class
+    public interface IObjectAccessor<T> : IDisposable where T : class
+    {
+        #region Public 属性
+
+        /// <summary>
+        /// 对象
+        /// </summary>
+        T? Value { get; set; }
+
+        #endregion Public 属性
+    }
+
+    /// <inheritdoc/>
+    public class ObjectAccessor<T> : IObjectAccessor<T> where T : class
     {
         #region Private 字段
 
@@ -16,9 +29,7 @@ namespace Cuture.Extensions.Modularity
 
         #region Public 属性
 
-        /// <summary>
-        /// 对象
-        /// </summary>
+        /// <inheritdoc/>
         public T? Value { get; set; }
 
         #endregion Public 属性

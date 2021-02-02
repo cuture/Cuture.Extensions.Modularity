@@ -31,7 +31,7 @@
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
-    <PackageVersion>$(VersionPrefix)-alpha0005</PackageVersion>
+    <PackageVersion>$(VersionPrefix)-alpha0006</PackageVersion>
 
     <PackageTags>Modularity Module DependencyInjection Extensions Framework</PackageTags>
   </PropertyGroup>

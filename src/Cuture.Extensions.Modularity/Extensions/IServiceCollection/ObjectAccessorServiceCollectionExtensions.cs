@@ -35,15 +35,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddObjectAccessor<T>(this IServiceCollection services, ServiceLifetime lifetime, T? value = null) where T : class
         {
-            if (services.Any(service => service.ServiceType == typeof(ObjectAccessor<T>) && service.Lifetime == lifetime))
+            if (services.Any(service => service.ServiceType == typeof(IObjectAccessor<T>) && service.Lifetime == lifetime))
             {
                 throw new Exception($"the same service ObjectAccessor<{typeof(T).FullName}> was already registered.");
             }
 
             var serviceDescriptor = lifetime switch
             {
-                ServiceLifetime.Singleton => ServiceDescriptor.Singleton<ObjectAccessor<T>>(new ObjectAccessor<T>(value)),
-                ServiceLifetime.Scoped => ServiceDescriptor.Scoped<ObjectAccessor<T>>(_ => new ObjectAccessor<T>(value)),
+                ServiceLifetime.Singleton => ServiceDescriptor.Singleton<IObjectAccessor<T>>(new ObjectAccessor<T>(value)),
+                ServiceLifetime.Scoped => ServiceDescriptor.Scoped<IObjectAccessor<T>>(_ => new ObjectAccessor<T>(value)),
                 _ => throw new ArgumentException($"ServiceLifetime: {lifetime} is a valueless value.", nameof(lifetime)),
             };
 
@@ -58,15 +58,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <typeparam name="T"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static ObjectAccessor<T> GetObjectAccessor<T>(this IServiceCollection services) where T : class
+        public static IObjectAccessor<T> GetObjectAccessor<T>(this IServiceCollection services) where T : class
         {
-            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(ObjectAccessor<T>));
+            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(IObjectAccessor<T>));
             if (serviceDescriptor is null
                 || serviceDescriptor.Lifetime != ServiceLifetime.Singleton)
             {
                 throw new InvalidOperationException($"before get ObjectAccessor<{typeof(T).Name}> from ServiceCollection must regist as a singleton service.");
             }
-            return (serviceDescriptor.ImplementationInstance as ObjectAccessor<T>)!;
+            return (serviceDescriptor.ImplementationInstance as IObjectAccessor<T>)!;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Microsoft.Extensions.DependencyInjection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IServiceCollection RemoveObjectAccessor<T>(this IServiceCollection services) where T : class
         {
-            return services.RemoveAll<ObjectAccessor<T>>();
+            return services.RemoveAll<IObjectAccessor<T>>();
         }
 
         /// <summary>
@@ -130,16 +130,16 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services"></param>
         /// <param name="accessor"></param>
         /// <returns></returns>
-        public static bool TryGetObjectAccessor<T>(this IServiceCollection services, out ObjectAccessor<T>? accessor) where T : class
+        public static bool TryGetObjectAccessor<T>(this IServiceCollection services, out IObjectAccessor<T>? accessor) where T : class
         {
-            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(ObjectAccessor<T>));
+            var serviceDescriptor = services.FirstOrDefault(m => m.ServiceType == typeof(IObjectAccessor<T>));
             if (serviceDescriptor is null
                 || serviceDescriptor.Lifetime != ServiceLifetime.Singleton)
             {
                 accessor = null;
                 return false;
             }
-            accessor = serviceDescriptor.ImplementationInstance as ObjectAccessor<T>;
+            accessor = serviceDescriptor.ImplementationInstance as IObjectAccessor<T>;
             return accessor is not null;
         }
 
