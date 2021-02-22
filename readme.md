@@ -23,7 +23,7 @@
 ### 3.1 安装`Nuget`包
 
 ```PowerShell
-Install-Package Cuture.Extensions.Modularity -IncludePrerelease
+Install-Package Cuture.Extensions.Modularity
 ```
 
 ### 3.2 实现一个模块
@@ -80,7 +80,7 @@ Note:
 
 #### 1. 安装Hosting拓展库
 ```PowerShell
-Install-Package Cuture.Extensions.Modularity.Hosting -IncludePrerelease
+Install-Package Cuture.Extensions.Modularity.Hosting
 ```
 
 #### 2. 在主机构建时配置模块加载
