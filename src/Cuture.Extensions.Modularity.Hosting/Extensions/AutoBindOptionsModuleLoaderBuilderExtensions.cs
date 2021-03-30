@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 using Cuture.Extensions.Modularity;
 
@@ -14,8 +16,14 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         #region Public 方法
 
+        /// <inheritdoc cref="AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsAutoBindOptions}?)"/>
+        public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder)
+        {
+            return moduleLoaderBuilder.AutoBindModuleOptions(options => { });
+        }
+
         /// <summary>
-        /// 自动查找标记了<see cref="AutoRegisterServicesInAssemblyAttribute"/>的模块中继承了<see cref="IOptions{TOptions}"/>的类。
+        /// 自动绑定标记了<see cref="AutoRegisterServicesInAssemblyAttribute"/>的模块中继承了<see cref="IOptions{TOptions}"/>的类。
         /// <para/>
         /// 默认情况下使用其完整名称为路径，在<see cref="IConfiguration"/>查找节点，并绑定值。
         /// <para/>
@@ -32,6 +40,20 @@ namespace Microsoft.Extensions.DependencyInjection
             optionAction?.Invoke(options);
 
             moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new OptionsAutoBindModulesBootstrapInterceptor(options));
+
+            return moduleLoaderBuilder;
+        }
+
+        /// <summary>
+        /// 自动绑定模块程序集中的配置类
+        /// </summary>
+        /// <param name="moduleLoaderBuilder"></param>
+        /// <param name="findOptionsTypesFunc">从程序集中获取需要绑定的类型的委托</param>
+        /// <param name="sectionKeyGetFunc">获取配置类型对应的<see cref="IConfiguration"/>Key的委托</param>
+        /// <returns></returns>
+        public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder, Func<Assembly, IEnumerable<Type>>? findOptionsTypesFunc = null, Func<Type, string?>? sectionKeyGetFunc = null)
+        {
+            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new CustomKeyOptionsAutoBindModulesBootstrapInterceptor(findOptionsTypesFunc, sectionKeyGetFunc));
 
             return moduleLoaderBuilder;
         }

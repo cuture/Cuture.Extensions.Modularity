@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,18 +18,24 @@ namespace Cuture.Extensions.Modularity
     {
         #region Private 字段
 
-        private readonly OptionsAutoBindOptions _options;
         private readonly Type _optionsBaseType = typeof(IOptions<object>);
         private readonly MethodInfo _optionsExtensionMethod;
 
         #endregion Private 字段
+
+        #region Protected 属性
+
+        /// <inheritdoc cref="OptionsAutoBindOptions"/>
+        protected OptionsAutoBindOptions AutoBindOptions { get; }
+
+        #endregion Protected 属性
 
         #region Public 构造函数
 
         /// <inheritdoc cref="OptionsAutoBindModulesBootstrapInterceptor"/>
         public OptionsAutoBindModulesBootstrapInterceptor(OptionsAutoBindOptions options)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            AutoBindOptions = options ?? throw new ArgumentNullException(nameof(options));
             _optionsExtensionMethod = typeof(OptionsConfigurationServiceCollectionExtensions).GetMethod("Configure", new[] { typeof(IServiceCollection), typeof(IConfiguration) })!;
         }
 
@@ -38,37 +46,7 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc/>
         public Task<bool> RegisteringServicesInAssemblyAsync(IServiceCollection services, Assembly assembly)
         {
-            var configuration = services.GetConfiguration();
-
-            if (configuration is null)
-            {
-                throw new ModularityException($"Cannot auto bind options with out any {nameof(IConfiguration)} in {nameof(IServiceCollection)}");
-            }
-
-            services.AddOptions().Configure<string>(configuration);
-
-            var optionsTypes = assembly.GetTypes()
-                                       .Where(m => m.IsClass && !m.IsAbstract && !m.IsGenericType && _optionsBaseType.IsAssignableFrom(m))
-                                       .ToArray();
-
-            var arguments = new object[2];
-            arguments[0] = services;
-
-            foreach (var optionsType in optionsTypes)
-            {
-                var targetConfiguration = GetOptionsConfiguretionSection(optionsType, configuration);
-
-                //if (targetConfiguration is null)
-                //{
-                //    throw new ModularityException($"cannot auto find {nameof(IConfiguration)} for option type {optionsType}.cannot auto bind it.");
-                //}
-
-                arguments[1] = targetConfiguration;
-
-                var methodInfo = _optionsExtensionMethod.MakeGenericMethod(optionsType);
-
-                methodInfo.Invoke(null, arguments);
-            }
+            BindOptionsInAssembly(services, assembly);
 
             return Task.FromResult(true);
         }
@@ -78,41 +56,112 @@ namespace Cuture.Extensions.Modularity
         #region Protected 方法
 
         /// <summary>
-        /// 获取Options的配置节点
+        /// 绑定程序集内的Options类
         /// </summary>
+        /// <param name="services"></param>
+        /// <param name="assembly"></param>
+        protected virtual void BindOptionsInAssembly(IServiceCollection services, Assembly assembly)
+        {
+            var configuration = services.GetConfiguration();
+
+            if (configuration is null)
+            {
+                throw new ModularityException($"Cannot auto bind options with out any {nameof(IConfiguration)} in {nameof(IServiceCollection)}");
+            }
+
+            services.AddOptions();
+
+            var optionsTypes = FindOptionsTypes(assembly);
+
+            foreach (var optionsType in optionsTypes)
+            {
+                var optionsConfiguration = GetOptionsConfiguration(configuration, optionsType);
+
+                ConfigureOptions(services, optionsType, optionsConfiguration);
+            }
+        }
+
+        /// <summary>
+        /// 配置options
+        /// </summary>
+        /// <param name="services"></param>
         /// <param name="optionsType"></param>
         /// <param name="configuration"></param>
-        /// <returns></returns>
-        protected virtual IConfiguration GetOptionsConfiguretionSection(Type optionsType, IConfiguration configuration)
+        protected void ConfigureOptions(IServiceCollection services, Type optionsType, IConfigurationSection configuration)
         {
-            string path;
-            if (_options.UseFullNamespaceAsPath)
+            var arguments = new object[] { services, configuration };
+
+            var methodInfo = _optionsExtensionMethod.MakeGenericMethod(optionsType);
+
+            methodInfo.Invoke(null, arguments);
+        }
+
+        /// <summary>
+        /// 查找程序集中的配置类型
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        protected virtual IEnumerable<Type> FindOptionsTypes(Assembly assembly)
+        {
+            return assembly.GetTypes()
+                           .Where(m => m.IsClass && !m.IsAbstract && !m.IsGenericType && _optionsBaseType.IsAssignableFrom(m))
+                           .ToArray();
+        }
+
+        /// <summary>
+        /// 获取Options的配置节点
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="optionsType"></param>
+        /// <returns></returns>
+        protected virtual IConfigurationSection GetOptionsConfiguration(IConfiguration configuration, Type optionsType)
+        {
+            var targetConfigurationKey = GetOptionsConfiguretionSectionKey(optionsType);
+
+            if (targetConfigurationKey is null)
+            {
+                throw new ModularityException($"cannot auto find {nameof(IConfiguration)} for option type {optionsType}.cannot auto bind it.");
+            }
+
+            var targetConfiguration = configuration.GetSection(targetConfigurationKey);
+            return targetConfiguration;
+        }
+
+        /// <summary>
+        /// 获取Options的配置节点Key
+        /// </summary>
+        /// <param name="optionsType"></param>
+        /// <returns></returns>
+        protected virtual string? GetOptionsConfiguretionSectionKey(Type optionsType)
+        {
+            string key;
+            if (AutoBindOptions.UseFullNamespaceAsPath)
             {
                 if (optionsType.FullName is null)
                 {
                     throw new ModularityException($"there is no namespace founded with option type {optionsType}.cannot auto bind it.");
                 }
-                path = optionsType.FullName.Replace('.', ':');
+                key = optionsType.FullName.Replace('.', ':');
             }
             else
             {
-                path = optionsType.Name;
+                key = optionsType.Name;
             }
 
-            if (_options.RemoveOptionsSuffix
-                && path.EndsWith("Options", StringComparison.OrdinalIgnoreCase))
+            if (AutoBindOptions.RemoveOptionsSuffix
+                && key.EndsWith("Options", StringComparison.OrdinalIgnoreCase))
             {
 #pragma warning disable IDE0057 // 使用范围运算符
-                path = path.Substring(0, path.Length - 7);
+                key = key.Substring(0, key.Length - 7);
 #pragma warning restore IDE0057 // 使用范围运算符
             }
 
-            if (!string.IsNullOrEmpty(_options.PathPrefix))
+            if (!string.IsNullOrEmpty(AutoBindOptions.PathPrefix))
             {
-                path = $"{_options.PathPrefix}:{path}";
+                key = $"{AutoBindOptions.PathPrefix}:{key}";
             }
 
-            return configuration.GetSection(path);
+            return key;
         }
 
         #endregion Protected 方法
