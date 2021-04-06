@@ -5,7 +5,7 @@ namespace Cuture.Extensions.Modularity
     /// <summary>
     /// Options自动绑定选项
     /// </summary>
-    public class OptionsAutoBindOptions
+    public class OptionsBindOptions
     {
         #region Private 字段
 

@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-using Microsoft.Extensions.Options;
-
 namespace Cuture.Extensions.Modularity
 {
     /// <summary>
-    /// 自动绑定<see cref="IOptions{TOptions}"/>的<inheritdoc cref="IModulesBootstrapInterceptor"/>
+    /// 自定义获取键的选项绑定器
     /// </summary>
-    internal class CustomKeyOptionsAutoBindModulesBootstrapInterceptor : OptionsAutoBindModulesBootstrapInterceptor
+    internal class CustomKeyGetOptionsBinder : DefaultOptionsBinder
     {
         #region Private 字段
 
@@ -20,7 +18,8 @@ namespace Cuture.Extensions.Modularity
 
         #region Public 构造函数
 
-        public CustomKeyOptionsAutoBindModulesBootstrapInterceptor(Func<Assembly, IEnumerable<Type>>? findOptionsTypesFunc, Func<Type, string?>? sectionKeyGetFunc) : base(new OptionsAutoBindOptions())
+        /// <inheritdoc cref="CustomKeyGetOptionsBinder"/>
+        public CustomKeyGetOptionsBinder(Func<Assembly, IEnumerable<Type>>? findOptionsTypesFunc, Func<Type, string?>? sectionKeyGetFunc) : base(new OptionsBindOptions())
         {
             _findOptionsTypesFunc = findOptionsTypesFunc;
             _sectionKeyGetFunc = sectionKeyGetFunc;

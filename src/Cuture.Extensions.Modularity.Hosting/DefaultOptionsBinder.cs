@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,9 +11,9 @@ using Microsoft.Extensions.Options;
 namespace Cuture.Extensions.Modularity
 {
     /// <summary>
-    /// 自动绑定<see cref="IOptions{TOptions}"/>的<inheritdoc cref="IModulesBootstrapInterceptor"/>
+    /// 默认的 <see cref="IOptionsBinder"/> 实现
     /// </summary>
-    public class OptionsAutoBindModulesBootstrapInterceptor : IModulesBootstrapInterceptor
+    public class DefaultOptionsBinder : IOptionsBinder
     {
         #region Private 字段
 
@@ -25,15 +24,15 @@ namespace Cuture.Extensions.Modularity
 
         #region Protected 属性
 
-        /// <inheritdoc cref="OptionsAutoBindOptions"/>
-        protected OptionsAutoBindOptions AutoBindOptions { get; }
+        /// <inheritdoc cref="OptionsBindOptions"/>
+        protected OptionsBindOptions AutoBindOptions { get; }
 
         #endregion Protected 属性
 
         #region Public 构造函数
 
-        /// <inheritdoc cref="OptionsAutoBindModulesBootstrapInterceptor"/>
-        public OptionsAutoBindModulesBootstrapInterceptor(OptionsAutoBindOptions options)
+        /// <inheritdoc cref="DefaultOptionsBinder"/>
+        public DefaultOptionsBinder(OptionsBindOptions options)
         {
             AutoBindOptions = options ?? throw new ArgumentNullException(nameof(options));
             _optionsExtensionMethod = typeof(OptionsConfigurationServiceCollectionExtensions).GetMethod("Configure", new[] { typeof(IServiceCollection), typeof(IConfiguration) })!;
@@ -44,23 +43,7 @@ namespace Cuture.Extensions.Modularity
         #region Public 方法
 
         /// <inheritdoc/>
-        public Task<bool> RegisteringServicesInAssemblyAsync(IServiceCollection services, Assembly assembly)
-        {
-            BindOptionsInAssembly(services, assembly);
-
-            return Task.FromResult(true);
-        }
-
-        #endregion Public 方法
-
-        #region Protected 方法
-
-        /// <summary>
-        /// 绑定程序集内的Options类
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="assembly"></param>
-        protected virtual void BindOptionsInAssembly(IServiceCollection services, Assembly assembly)
+        public virtual void BindOptionsInAssembly(IServiceCollection services, Assembly assembly)
         {
             var configuration = services.GetConfiguration();
 
@@ -80,6 +63,10 @@ namespace Cuture.Extensions.Modularity
                 ConfigureOptions(services, optionsType, optionsConfiguration);
             }
         }
+
+        #endregion Public 方法
+
+        #region Protected 方法
 
         /// <summary>
         /// 配置options
@@ -134,7 +121,13 @@ namespace Cuture.Extensions.Modularity
         /// <returns></returns>
         protected virtual string? GetOptionsConfiguretionSectionKey(Type optionsType)
         {
+            if (optionsType.GetCustomAttribute<ConfigurationSectionKeyAttribute>() is ConfigurationSectionKeyAttribute sectionKeyAttribute)
+            {
+                return sectionKeyAttribute.Key;
+            }
+
             string key;
+
             if (AutoBindOptions.UseFullNamespaceAsPath)
             {
                 if (optionsType.FullName is null)

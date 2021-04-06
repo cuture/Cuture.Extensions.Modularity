@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         #region Public 方法
 
-        /// <inheritdoc cref="AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsAutoBindOptions}?)"/>
+        /// <inheritdoc cref="AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsBindOptions}?)"/>
         public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder)
         {
             return moduleLoaderBuilder.AutoBindModuleOptions(options => { });
@@ -34,12 +34,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="moduleLoaderBuilder"></param>
         /// <param name="optionAction">配置选项的委托</param>
         /// <returns></returns>
-        public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder, Action<OptionsAutoBindOptions>? optionAction = null)
+        public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder, Action<OptionsBindOptions>? optionAction = null)
         {
-            var options = new OptionsAutoBindOptions();
+            var options = new OptionsBindOptions();
             optionAction?.Invoke(options);
 
-            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new OptionsAutoBindModulesBootstrapInterceptor(options));
+            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new OptionsBindModulesBootstrapInterceptor(new DefaultOptionsBinder(options)));
 
             return moduleLoaderBuilder;
         }
@@ -53,7 +53,20 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder, Func<Assembly, IEnumerable<Type>>? findOptionsTypesFunc = null, Func<Type, string?>? sectionKeyGetFunc = null)
         {
-            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new CustomKeyOptionsAutoBindModulesBootstrapInterceptor(findOptionsTypesFunc, sectionKeyGetFunc));
+            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new OptionsBindModulesBootstrapInterceptor(new CustomKeyGetOptionsBinder(findOptionsTypesFunc, sectionKeyGetFunc)));
+
+            return moduleLoaderBuilder;
+        }
+
+        /// <summary>
+        /// 使用指定的 <see cref="IOptionsBinder"/> 绑定模块程序集中的配置类
+        /// </summary>
+        /// <param name="moduleLoaderBuilder"></param>
+        /// <param name="optionsBinder">选项绑定器</param>
+        /// <returns></returns>
+        public static IModuleLoaderBuilder AutoBindModuleOptions(this IModuleLoaderBuilder moduleLoaderBuilder, IOptionsBinder optionsBinder)
+        {
+            moduleLoaderBuilder.ModuleLoadOptions.ModulesBootstrapInterceptors.Add(new OptionsBindModulesBootstrapInterceptor(optionsBinder));
 
             return moduleLoaderBuilder;
         }

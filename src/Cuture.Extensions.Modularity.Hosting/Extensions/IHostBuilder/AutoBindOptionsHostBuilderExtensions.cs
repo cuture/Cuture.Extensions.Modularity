@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 using Cuture.Extensions.Modularity;
 using Cuture.Extensions.Modularity.Hosting;
@@ -14,19 +16,45 @@ namespace Microsoft.Extensions.Hosting
     {
         #region Public 方法
 
-        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsAutoBindOptions}?)"/>
-        public static IHostBuilder AutoBindModuleOptions(this IHostBuilder hostBuilder, Action<OptionsAutoBindOptions>? optionAction = null)
+        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder)"/>
+        public static IHostBuilder AutoBindModuleOptions(this IHostBuilder hostBuilder)
         {
-            var autoBindOptions = new OptionsAutoBindOptions();
-            optionAction?.Invoke(autoBindOptions);
+            return hostBuilder.AutoBindModuleOptions(optionAction => { });
+        }
 
-            hostBuilder.InternalOptionModuleLoadBuilder(options =>
-            {
-                options.ModulesBootstrapInterceptors.Add(new OptionsAutoBindModulesBootstrapInterceptor(autoBindOptions));
-            });
-            return hostBuilder;
+        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder, Action{OptionsBindOptions}?)"/>
+        public static IHostBuilder AutoBindModuleOptions(this IHostBuilder hostBuilder, Action<OptionsBindOptions>? optionAction = null)
+        {
+            var bindOptions = new OptionsBindOptions();
+            optionAction?.Invoke(bindOptions);
+
+            return hostBuilder.InternalAddBootstrapInterceptor(new OptionsBindModulesBootstrapInterceptor(new DefaultOptionsBinder(bindOptions)));
+        }
+
+        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder, Func{Assembly, IEnumerable{Type}}?, Func{Type, string?}?)"/>
+        public static IHostBuilder AutoBindModuleOptions(this IHostBuilder hostBuilder, Func<Assembly, IEnumerable<Type>>? findOptionsTypesFunc = null, Func<Type, string?>? sectionKeyGetFunc = null)
+        {
+            return hostBuilder.InternalAddBootstrapInterceptor(new OptionsBindModulesBootstrapInterceptor(new CustomKeyGetOptionsBinder(findOptionsTypesFunc, sectionKeyGetFunc)));
+        }
+
+        /// <inheritdoc cref="AutoBindOptionsModuleLoaderBuilderExtensions.AutoBindModuleOptions(IModuleLoaderBuilder, IOptionsBinder)"/>
+        public static IHostBuilder AutoBindModuleOptions(this IHostBuilder hostBuilder, IOptionsBinder optionsBinder)
+        {
+            return hostBuilder.InternalAddBootstrapInterceptor(new OptionsBindModulesBootstrapInterceptor(optionsBinder));
         }
 
         #endregion Public 方法
+
+        #region Private 方法
+
+        private static IHostBuilder InternalAddBootstrapInterceptor(this IHostBuilder hostBuilder, IModulesBootstrapInterceptor interceptor)
+        {
+            return hostBuilder.InternalOptionModuleLoadBuilder(options =>
+            {
+                options.ModulesBootstrapInterceptors.Add(interceptor);
+            });
+        }
+
+        #endregion Private 方法
     }
 }
