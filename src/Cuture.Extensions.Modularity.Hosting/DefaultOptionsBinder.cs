@@ -58,6 +58,10 @@ namespace Cuture.Extensions.Modularity
 
             foreach (var optionsType in optionsTypes)
             {
+                if (optionsType.GetCustomAttribute(typeof(SkipOptionBindAttribute)) is not null)
+                {
+                    continue;
+                }
                 var optionsConfiguration = GetOptionsConfiguration(configuration, optionsType);
 
                 ConfigureOptions(services, optionsType, optionsConfiguration);
