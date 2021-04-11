@@ -88,7 +88,7 @@ namespace System
             if (!type.IsClass
                 || type.IsInterface
                 || type.IsAbstract
-                || type.IsGenericType)
+                || type.IsGenericTypeDefinition)
             {
                 return false;
             }
