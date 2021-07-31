@@ -4,12 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9658D91F-1F21-4A0A-A1BE-866524579C2C}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{34D59234-872F-4900-902D-ABF6641493D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45FE741F-8C30-42B3-A825-F7278DFF8656}"
 	ProjectSection(SolutionItems) = preProject
-		common.props = common.props
+		Directory.Build.props = Directory.Build.props
 		readme.md = readme.md
 		runable_tfm.props = runable_tfm.props
 	EndProjectSection

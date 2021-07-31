@@ -12,7 +12,7 @@ namespace Cuture.Extensions.Modularity
         /// <summary>
         /// 储存的传递项
         /// </summary>
-        public Dictionary<string, object?> Items { get; protected set; } = new Dictionary<string, object?>();
+        public Dictionary<string, object?> Items { get; protected set; } = new();
 
         #endregion Public 属性
 

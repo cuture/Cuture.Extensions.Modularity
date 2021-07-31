@@ -8,7 +8,7 @@ namespace Cuture.Extensions.Modularity
         #region Private 字段
 
         private readonly List<KeyValuePair<IModuleSource, Action<ModuleLoadOptions>?>> _moduleSources = new();
-        private readonly List<Action<ModuleLoadOptions>> _optionActions = new List<Action<ModuleLoadOptions>>();
+        private readonly List<Action<ModuleLoadOptions>> _optionActions = new();
 
         #endregion Private 字段
 

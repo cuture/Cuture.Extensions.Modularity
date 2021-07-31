@@ -13,7 +13,7 @@ namespace Cuture.Extensions.Modularity
         /// <summary>
         /// 默认实例
         /// </summary>
-        public static readonly DefaultModuleDescriptorBuilder Default = new DefaultModuleDescriptorBuilder();
+        public static readonly DefaultModuleDescriptorBuilder Default = new();
 
         #endregion Public 字段
 

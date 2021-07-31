@@ -9,8 +9,8 @@ namespace Cuture.Extensions.Modularity
     {
         #region Private 字段
 
-        private List<IModuleDescriptor> _dependencies = new List<IModuleDescriptor>();
-        private List<IModuleDescriptor> _dependents = new List<IModuleDescriptor>();
+        private List<IModuleDescriptor> _dependencies = new();
+        private List<IModuleDescriptor> _dependents = new();
 
         #endregion Private 字段
 

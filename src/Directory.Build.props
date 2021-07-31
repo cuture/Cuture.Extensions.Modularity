@@ -8,48 +8,41 @@
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <IsPackable>true</IsPackable>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!--Version-->
   <PropertyGroup>
-    <VersionMajor>1</VersionMajor>
-    <VersionMinor>1</VersionMinor>
-    <VersionPatch>1</VersionPatch>
-    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionPatch)</VersionPrefix>
-
     <McrVersion>5.0.*</McrVersion>
   </PropertyGroup>
 
   <!--Package Info-->
   <PropertyGroup>
+    <VersionPrefix>1.1.2</VersionPrefix>
+
     <PackageIdPrefix>Cuture.Extensions</PackageIdPrefix>
     <Authors>Stratos</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/cuture/Cuture.Extensions.Modularity.git</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/cuture/Cuture.Extensions.Modularity</PackageProjectUrl>
 
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-    <FileVersion>$(AssemblyVersion)</FileVersion>
-    <PackageVersion>$(VersionPrefix)</PackageVersion>
 
     <PackageTags>Modularity Module DependencyInjection Extensions Framework</PackageTags>
   </PropertyGroup>
 
   <!--SourceLink-->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <!--Buid-->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-
 </Project>

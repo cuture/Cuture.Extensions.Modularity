@@ -11,7 +11,7 @@ namespace Cuture.Extensions.Modularity
     {
         #region Private 字段
 
-        private readonly List<IModuleSource> _moduleSources = new List<IModuleSource>();
+        private readonly List<IModuleSource> _moduleSources = new();
 
         #endregion Private 字段
 
