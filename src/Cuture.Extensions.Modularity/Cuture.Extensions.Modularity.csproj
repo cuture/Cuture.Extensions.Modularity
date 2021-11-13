@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>a library for modular develop based on Microsoft.Extensions.DependencyInjection. </Description>
+
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\readme.md" Link="readme.md" Pack="true" PackagePath="/" />
+
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(McrVersion)" />
   </ItemGroup>
 </Project>

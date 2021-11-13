@@ -1,7 +1,7 @@
 <Project>
   <!--Project Setting-->
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
 
     <Nullable>enable</Nullable>
@@ -19,9 +19,17 @@
     <McrVersion>5.0.*</McrVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <McrVersion>5.0.*</McrVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <McrVersion>6.0.*</McrVersion>
+  </PropertyGroup>
+
   <!--Package Info-->
   <PropertyGroup>
-    <VersionPrefix>1.1.2</VersionPrefix>
+    <VersionPrefix>1.1.3</VersionPrefix>
 
     <PackageIdPrefix>Cuture.Extensions</PackageIdPrefix>
     <Authors>Stratos</Authors>

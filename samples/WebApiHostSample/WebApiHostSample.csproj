@@ -2,7 +2,7 @@
   <Import Project="../sample_host_commom.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <DefineConstants>SlimStartup</DefineConstants>
   </PropertyGroup>
 

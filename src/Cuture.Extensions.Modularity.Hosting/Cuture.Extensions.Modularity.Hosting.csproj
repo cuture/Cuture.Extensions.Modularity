@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>a library for modular develop with Microsoft.Extensions.Hosting.</Description>
+    <Description>a library for modular develop with Cuture.Extensions.Modularity and Microsoft.Extensions.Hosting.</Description>
 
     <PackageTags>$(PackageTags) Host Hosting</PackageTags>
 
