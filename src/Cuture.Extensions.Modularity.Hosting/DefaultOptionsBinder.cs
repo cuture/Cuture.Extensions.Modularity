@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -156,6 +157,30 @@ namespace Cuture.Extensions.Modularity
             if (!string.IsNullOrEmpty(AutoBindOptions.PathPrefix))
             {
                 key = $"{AutoBindOptions.PathPrefix}:{key}";
+            }
+
+            if (AutoBindOptions.SimplifiedHierarchy)
+            {
+                var subKeys = key.Split(':');
+
+                var keyBuilder = new StringBuilder(key.Length * 2);
+
+                var lastSubKey = subKeys.First();
+
+                keyBuilder.Append(lastSubKey);
+
+                foreach (var subKey in subKeys.Skip(1))
+                {
+                    if (string.Equals(lastSubKey, subKey, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    keyBuilder.Append(':');
+                    keyBuilder.Append(subKey);
+                    lastSubKey = subKey;
+                }
+
+                return keyBuilder.ToString();
             }
 
             return key;

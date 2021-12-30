@@ -26,6 +26,17 @@ namespace Cuture.Extensions.Modularity
         public bool RemoveOptionsSuffix { get; set; } = false;
 
         /// <summary>
+        /// 当启用 <see cref="UseFullNamespaceAsPath"/> 和 <see cref="RemoveOptionsSuffix"/> 时<para/>
+        /// 简化配置的层次结构，移除连续重复的层级<para/>
+        /// 默认为 false<para/>
+        /// 例如：<para/>
+        /// 配置类 SampleNamespace.Hello.HelloOptions 的匹配路径为 SampleNamespace:Hello:Hello <para/>
+        /// 这会导致在配置文件中连续两层为 Hello <para/>
+        /// 设置此选项为 true ，自动移除连续的 Hello ，最终其匹配路径为 SampleNamespace:Hello
+        /// </summary>
+        public bool SimplifiedHierarchy { get; set; } = false;
+
+        /// <summary>
         /// 是否使用完整命名空间作为配置路径
         /// <para/>
         /// 当值为 true 时：
