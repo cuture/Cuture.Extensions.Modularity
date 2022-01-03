@@ -13,6 +13,14 @@ namespace Cuture.Extensions.Modularity
     public interface IModulesBootstrapInterceptor
     {
         /// <summary>
+        /// 配置模块服务
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="moduleInstance">模块实例</param>
+        /// <returns>返回false则中断当前模块的 <see cref="IConfigureServices"/>、<see cref="IConfigureServicesAsync"/></returns>
+        Task<bool> ConfigureModuleServicesAsync(ServiceConfigurationContext context, object moduleInstance);
+
+        /// <summary>
         /// 从程序集中注册服务中
         /// </summary>
         /// <param name="services"></param>

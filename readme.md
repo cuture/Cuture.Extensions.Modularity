@@ -124,7 +124,7 @@ public class Hello : IHello
 除示例的`ExportServices`外，还有`ExportSingletonServices`、`ExportScopedServices`、`ExportTransientServices`等多个拓展特性的重载实现；
 
 ## `IOptions<TOptions>`自动绑定
- - 自动查找标记了`AutoRegisterServicesInAssemblyAttribute`的模块中继承了`IOptions<TOptions>`的类；
+ - 自动查找模块中继承了`IOptions<TOptions>`的类；
  - 使用其完整名称为路径，在`IConfiguration`查找节点，并绑定值；
  - 如 `A` 类命名空间为 `B.C.D.E.F` ，则`IConfiguration`查找路径为 `B:C:D:E:F:A`；
  - Note: 构建过程中必须有可访问的`IConfiguration` !!! 详见示例项目；
@@ -136,7 +136,7 @@ public class Hello : IHello
 Host.CreateDefaultBuilder(args)
     .ConfigureHostConfiguration(builder => builder.AddJsonFile("appsettings.Development.json"))
     .LoadModule<HostSampleModule>()
-    .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
+    .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定模块中继承了 IOptions<TOptions> 的类
     .UseConsoleLifetime()
     .InitializationModules()
     .Run();

@@ -123,92 +123,98 @@ namespace Cuture.Extensions.Modularity
         #region Lifecycle
 
         /// <inheritdoc cref="IConfigureServices"/>
-        protected virtual async Task ConfigureModuleServicesAsync(ServiceConfigurationContext context, AutoRegisterModuleServicesContext autoRegisterContext, object module)
+        protected virtual async Task ConfigureModuleServicesAsync(ServiceConfigurationContext context, AutoRegisterModuleServicesContext autoRegisterContext, object moduleInstance)
         {
-            await AutoRegisterModuleServicesAsync(module, autoRegisterContext);
-            if (module is IConfigureServices configureServices)
+            await AutoRegisterModuleServicesAsync(moduleInstance, autoRegisterContext);
+
+            if (!await _modulesBootstrapInterceptor.ConfigureModuleServicesAsync(context, moduleInstance))
+            {
+                return;
+            }
+
+            if (moduleInstance is IConfigureServices configureServices)
             {
                 configureServices.ConfigureServices(context);
             }
-            if (module is IConfigureServicesAsync configureServicesAsync)
+            if (moduleInstance is IConfigureServicesAsync configureServicesAsync)
             {
                 await configureServicesAsync.ConfigureServicesAsync(context);
             }
         }
 
         /// <inheritdoc cref="IPostConfigureServices"/>
-        protected virtual async Task PostConfigureModuleServicesAsync(ServiceConfigurationContext context, object module)
+        protected virtual async Task PostConfigureModuleServicesAsync(ServiceConfigurationContext context, object moduleInstance)
         {
-            if (module is IPostConfigureServices postConfigureServices)
+            if (moduleInstance is IPostConfigureServices postConfigureServices)
             {
                 postConfigureServices.PostConfigureServices(context);
             }
-            if (module is IPostConfigureServicesAsync postConfigureServicesAsync)
+            if (moduleInstance is IPostConfigureServicesAsync postConfigureServicesAsync)
             {
                 await postConfigureServicesAsync.PostConfigureServicesAsync(context);
             }
         }
 
         /// <inheritdoc cref="IPreConfigureServices"/>
-        protected virtual async Task PreConfigureModuleServicesAsync(ServiceConfigurationContext context, object module)
+        protected virtual async Task PreConfigureModuleServicesAsync(ServiceConfigurationContext context, object moduleInstance)
         {
-            if (module is IPreConfigureServices preConfigureServices)
+            if (moduleInstance is IPreConfigureServices preConfigureServices)
             {
                 preConfigureServices.PreConfigureServices(context);
             }
-            if (module is IPreConfigureServicesAsync preConfigureServicesAsync)
+            if (moduleInstance is IPreConfigureServicesAsync preConfigureServicesAsync)
             {
                 await preConfigureServicesAsync.PreConfigureServicesAsync(context);
             }
         }
 
         /// <inheritdoc cref="IOnApplicationInitialization"/>
-        private static async Task OnApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        private static async Task OnApplicationInitializationAsync(ApplicationInitializationContext context, object moduleInstance)
         {
-            if (module is IOnApplicationInitialization onApplicationInitialization)
+            if (moduleInstance is IOnApplicationInitialization onApplicationInitialization)
             {
                 onApplicationInitialization.OnApplicationInitialization(context);
             }
-            if (module is IOnApplicationInitializationAsync onApplicationInitializationAsync)
+            if (moduleInstance is IOnApplicationInitializationAsync onApplicationInitializationAsync)
             {
                 await onApplicationInitializationAsync.OnApplicationInitializationAsync(context);
             }
         }
 
         /// <inheritdoc cref="IOnApplicationShutdown"/>
-        private static async Task OnApplicationShutdownAsync(ApplicationShutdownContext context, object module, CancellationToken token)
+        private static async Task OnApplicationShutdownAsync(ApplicationShutdownContext context, object moduleInstance, CancellationToken token)
         {
-            if (module is IOnApplicationShutdown onApplicationShutdown)
+            if (moduleInstance is IOnApplicationShutdown onApplicationShutdown)
             {
                 onApplicationShutdown.OnApplicationShutdown(context);
             }
-            if (module is IOnApplicationShutdownAsync onApplicationShutdownAsync)
+            if (moduleInstance is IOnApplicationShutdownAsync onApplicationShutdownAsync)
             {
                 await onApplicationShutdownAsync.OnApplicationShutdownAsync(context, token);
             }
         }
 
         /// <inheritdoc cref="IOnPostApplicationInitialization"/>
-        private static async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        private static async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context, object moduleInstance)
         {
-            if (module is IOnPostApplicationInitialization onPostApplicationInitialization)
+            if (moduleInstance is IOnPostApplicationInitialization onPostApplicationInitialization)
             {
                 onPostApplicationInitialization.OnPostApplicationInitialization(context);
             }
-            if (module is IOnPostApplicationInitializationAsync onPostApplicationInitializationAsync)
+            if (moduleInstance is IOnPostApplicationInitializationAsync onPostApplicationInitializationAsync)
             {
                 await onPostApplicationInitializationAsync.OnPostApplicationInitializationAsync(context);
             }
         }
 
         /// <inheritdoc cref="IOnPreApplicationInitialization"/>
-        private static async Task OnPreApplicationInitializationAsync(ApplicationInitializationContext context, object module)
+        private static async Task OnPreApplicationInitializationAsync(ApplicationInitializationContext context, object moduleInstance)
         {
-            if (module is IOnPreApplicationInitialization preApplicationInitialization)
+            if (moduleInstance is IOnPreApplicationInitialization preApplicationInitialization)
             {
                 preApplicationInitialization.OnPreApplicationInitialization(context);
             }
-            if (module is IOnPreApplicationInitializationAsync onPreApplicationInitializationAsync)
+            if (moduleInstance is IOnPreApplicationInitializationAsync onPreApplicationInitializationAsync)
             {
                 await onPreApplicationInitializationAsync.OnPreApplicationInitializationAsync(context);
             }

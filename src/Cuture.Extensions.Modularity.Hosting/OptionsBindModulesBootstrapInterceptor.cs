@@ -31,12 +31,14 @@ namespace Cuture.Extensions.Modularity
         #region Public 方法
 
         /// <inheritdoc/>
-        public Task<bool> RegisteringServicesInAssemblyAsync(IServiceCollection services, Assembly assembly)
+        public Task<bool> ConfigureModuleServicesAsync(ServiceConfigurationContext context, object moduleInstance)
         {
-            _optionsBinder.BindOptionsInAssembly(services, assembly);
-
+            _optionsBinder.BindOptionsInAssembly(context.Services, moduleInstance.GetType().Assembly);
             return Task.FromResult(true);
         }
+
+        /// <inheritdoc/>
+        public Task<bool> RegisteringServicesInAssemblyAsync(IServiceCollection services, Assembly assembly) => Task.FromResult(true);
 
         #endregion Public 方法
     }

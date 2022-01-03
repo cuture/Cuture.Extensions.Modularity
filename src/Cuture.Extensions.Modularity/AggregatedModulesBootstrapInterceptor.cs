@@ -47,6 +47,20 @@ namespace Cuture.Extensions.Modularity
         #region Public 方法
 
         /// <inheritdoc/>
+        public async Task<bool> ConfigureModuleServicesAsync(ServiceConfigurationContext context, object moduleInstance)
+        {
+            foreach (var item in ModulesBootstrapInterceptors)
+            {
+                if (!await item.ConfigureModuleServicesAsync(context, moduleInstance))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> RegisteringServicesInAssemblyAsync(IServiceCollection services, Assembly assembly)
         {
             foreach (var item in ModulesBootstrapInterceptors)
