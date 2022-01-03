@@ -5,7 +5,8 @@ using SampleModule2;
 namespace SampleModule5
 {
     //使用Transient确保每次获取不一样
-    [ExportTransientServices(typeof(IRandomProvider))]
+    [ExportTransientServices]
+    //[ExportTransientServices(typeof(IRandomProvider))]
     public class TRProvider : IRandomProvider
     {
         public int Random()

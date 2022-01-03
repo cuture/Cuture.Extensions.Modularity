@@ -143,6 +143,66 @@ namespace System
             }
         }
 
+        #region MostLikelyDirectInterfaces
+
+        private static WeakReference<Type[]?> s_defaultExcludeTypes = new(null);
+
+        /// <summary>
+        /// <inheritdoc cref="CutureExtensionsModularityTypeReflectionExtensions.GetMostLikelyDirectInterfaces"/>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="excludeTypes">要排除的类型</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetMostLikelyDirectInterfaces(this Type? type, IEnumerable<Type> excludeTypes)
+        {
+            if (type is null)
+            {
+                return Array.Empty<Type>();
+            }
+            var types = type.GetMostLikelyDirectInterfaces().Except(excludeTypes).ToArray();
+            return types.Length > 0 ? types : GetMostLikelyDirectInterfaces(type.BaseType, excludeTypes);
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="CutureExtensionsModularityTypeReflectionExtensions.GetMostLikelyDirectInterfaces"/>
+        /// 排除默认的类型 IDisposable IAsyncDisposable
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetMostLikelyDirectInterfacesExcludeDefaults(this Type? type)
+        {
+            if (type is null)
+            {
+                return Array.Empty<Type>();
+            }
+            return type.GetMostLikelyDirectInterfaces(GetDefaultExcludeTypes());
+        }
+
+        private static Type[] GetDefaultExcludeTypes()
+        {
+            if (s_defaultExcludeTypes.TryGetTarget(out var types))
+            {
+                return types ?? Array.Empty<Type>();
+            }
+            lock (s_defaultExcludeTypes)
+            {
+                if (s_defaultExcludeTypes.TryGetTarget(out types))
+                {
+                    return types ?? Array.Empty<Type>();
+                }
+                types = new[] {
+                    typeof(IDisposable),
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+		            typeof(IAsyncDisposable)
+#endif
+                };
+                s_defaultExcludeTypes.SetTarget(types);
+                return types;
+            }
+        }
+
+        #endregion MostLikelyDirectInterfaces
+
         #endregion Public 方法
     }
 }

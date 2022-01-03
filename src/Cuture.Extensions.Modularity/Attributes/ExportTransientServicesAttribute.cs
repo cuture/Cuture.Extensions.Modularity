@@ -12,10 +12,7 @@ namespace Cuture.Extensions.Modularity
     {
         #region Public 构造函数
 
-        /// <summary>
-        /// <inheritdoc cref="ExportTransientServicesAttribute"/>
-        /// </summary>
-        /// <param name="exportTypes"></param>
+        /// <inheritdoc cref="ExportTransientServicesAttribute(AddDIMode, Type[])"/>
         public ExportTransientServicesAttribute(params Type[] exportTypes) : base(ServiceLifetime.Transient, exportTypes)
         {
         }
@@ -24,7 +21,7 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc cref="ExportTransientServicesAttribute"/>
         /// </summary>
         /// <param name="addMode">添加到DI容器的方式</param>
-        /// <param name="exportTypes"></param>
+        /// <param name="exportTypes"><inheritdoc cref="ExportServicesAttribute(byte)"/></param>
         public ExportTransientServicesAttribute(AddDIMode addMode, params Type[] exportTypes) : base(ServiceLifetime.Transient, addMode, exportTypes)
         {
         }

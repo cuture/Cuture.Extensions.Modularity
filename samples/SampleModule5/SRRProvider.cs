@@ -5,7 +5,8 @@ using SampleModule2;
 namespace SampleModule5
 {
     //使用Scoped确保每个请求不一样
-    [ExportScopedServices(typeof(IRequestRandomProvider))]
+    [ExportScopedServices]
+    //[ExportScopedServices(typeof(IRequestRandomProvider))]
     public class SRRProvider : IRequestRandomProvider
     {
         public int Random()

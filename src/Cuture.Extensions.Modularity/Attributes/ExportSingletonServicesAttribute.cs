@@ -12,10 +12,7 @@ namespace Cuture.Extensions.Modularity
     {
         #region Public 构造函数
 
-        /// <summary>
-        /// <inheritdoc cref="ExportSingletonServicesAttribute"/>
-        /// </summary>
-        /// <param name="exportTypes"></param>
+        /// <inheritdoc cref="ExportSingletonServicesAttribute(AddDIMode, Type[])"/>
         public ExportSingletonServicesAttribute(params Type[] exportTypes) : base(ServiceLifetime.Singleton, exportTypes)
         {
         }
@@ -24,7 +21,7 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc cref="ExportSingletonServicesAttribute"/>
         /// </summary>
         /// <param name="addMode">添加到DI容器的方式</param>
-        /// <param name="exportTypes"></param>
+        /// <param name="exportTypes"><inheritdoc cref="ExportServicesAttribute(byte)"/></param>
         public ExportSingletonServicesAttribute(AddDIMode addMode, params Type[] exportTypes) : base(ServiceLifetime.Singleton, addMode, exportTypes)
         {
         }
