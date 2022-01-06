@@ -43,7 +43,8 @@ public class SampleModule : AppModule
 }
 ```
 - `[DependsOn]`：声明此模块依赖的模块，加载顺序与声明顺序相同;（可选）
-- `[AutoRegisterServicesInAssembly]`：有此特性的模块将会自动将所在程序集中使用ExportServices标记的导出服务注入到DI容器;（可选）
+- ~~`[AutoRegisterServicesInAssembly]`：有此特性的模块将会自动将所在程序集中使用ExportServices标记的导出服务注入到DI容器;（可选）~~
+  - `1.1.6`之后默认自动注册，使用`[DisableAssemblyServicesRegister]`特性进行手动关闭
 - 继承`AppModule`：标准的模块只需要继承`IAppModule`即可。如果需要单独的配置，则可以单独实现`IPreConfigureServices`、`IConfigureServices`、`IPostConfigureServices`、`IOnPreApplicationInitialization`、`IOnApplicationInitialization`、`IOnPostApplicationInitialization`、`IOnApplicationShutdown`以在对应的时机进行配置，或直接继承`AppModule`并重写对应的方法；所有方法都有异步版本`IPreConfigureServicesAsync`、`IConfigureServicesAsync`、`IPostConfigureServicesAsync`、`IOnPreApplicationInitializationAsync`、`IOnApplicationInitializationAsync`、`IOnPostApplicationInitializationAsync`、`IOnApplicationShutdownAsync`，或直接继承`AsyncAppModule`；
 
 ### 3.3 直接通过DI容器使用模块

@@ -12,7 +12,6 @@ namespace SampleModule2
     [DependsOn(
         typeof(SampleModule4.SampleModule4Module)
         )]
-    [AutoRegisterServicesInAssembly]
     public class SampleModule2Module : AppModule, IOnPostApplicationInitializationAsync
     {
         public async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)

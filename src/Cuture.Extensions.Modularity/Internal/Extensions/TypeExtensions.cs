@@ -103,7 +103,7 @@ namespace System
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool ShouldRegisterServicesInAssembly(this Type type)
         {
-            return type.IsDefined(typeof(AutoRegisterServicesInAssemblyAttribute), true);
+            return !type.IsDefined(typeof(DisableAssemblyServicesRegisterAttribute), true);
         }
 
         /// <summary>

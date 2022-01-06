@@ -22,6 +22,7 @@ namespace Cuture.Extensions.Modularity
         #region Public 构造函数
 
         /// <inheritdoc cref="AutoRegisterServicesInAssemblyAttribute"/>
+        [Obsolete("1.1.6之后的版本默认会进行注册，不需要再手动指定此特性，除非需要自定义 ServiceRegistrar")]
         public AutoRegisterServicesInAssemblyAttribute()
         {
         }
@@ -29,11 +30,11 @@ namespace Cuture.Extensions.Modularity
         /// <summary>
         /// <inheritdoc cref="AutoRegisterServicesInAssemblyAttribute"/>
         /// </summary>
-        public AutoRegisterServicesInAssemblyAttribute(Type type)
+        public AutoRegisterServicesInAssemblyAttribute(Type serviceRegistrarType)
         {
-            ServiceRegistrarType = type ?? throw new ArgumentNullException(nameof(type));
+            ServiceRegistrarType = serviceRegistrarType ?? throw new ArgumentNullException(nameof(serviceRegistrarType));
 
-            type.ThrowIfNotInherit<IServiceRegistrar>();
+            serviceRegistrarType.ThrowIfNotInherit<IServiceRegistrar>();
         }
 
         #endregion Public 构造函数
