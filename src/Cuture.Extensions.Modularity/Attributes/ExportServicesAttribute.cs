@@ -116,6 +116,11 @@ namespace Cuture.Extensions.Modularity
         /// <inheritdoc/>
         public virtual IEnumerable<Type> GetExportServiceTypes(Type targetType)
         {
+            if (targetType.IsAbstract && targetType.IsSealed)
+            {
+                throw new ArgumentException($"Can not export service from static class {targetType}");
+            }
+
             TargetType = targetType;
 
             if (ExportTypeDiscovererType is null)
@@ -128,7 +133,14 @@ namespace Cuture.Extensions.Modularity
                 if (types is null
                     || !types.Any())
                 {
-                    throw new ModularityException($"Can not get export service for type {targetType} automatically . Must use {nameof(ExportServicesAttribute)} define it clearly .");
+                    if (targetType.GetInterfaces().IsNullOrEmpty())
+                    {
+                        types = new[] { targetType };
+                    }
+                    else
+                    {
+                        throw new ModularityException($"Can not get export service for type {targetType} automatically . Must use {nameof(ExportServicesAttribute)} define it clearly .");
+                    }
                 }
                 else if (types.Length > 1)
                 {

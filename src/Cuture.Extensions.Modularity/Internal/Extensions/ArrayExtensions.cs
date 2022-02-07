@@ -13,7 +13,7 @@ namespace System
         /// <param name="array"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNullOrEmpty<T>(this T[] array)
+        public static bool IsNullOrEmpty<T>(this T[]? array)
         {
             return array is null
                    || array.Length == 0;
