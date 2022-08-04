@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IHostBuilder? GetHostBuilder(this IServiceCollection services) => services.GetObjectAccessorValue<IHostBuilderContainer>()?.Value;
 
         /// <inheritdoc cref="GetHostBuilder(IServiceCollection)"/>
-        public static IHostBuilder GetRequiredHostBuilder(this IServiceCollection services) => services.GetObjectAccessorValue<IHostBuilderContainer>()?.Value
+        public static IHostBuilder GetRequiredHostBuilder(this IServiceCollection services) => services.GetHostBuilder()
                                                                                                ?? throw new InvalidOperationException($"Not found {nameof(IHostBuilder)} in serviceCollection.");
 
         #endregion Public 方法
