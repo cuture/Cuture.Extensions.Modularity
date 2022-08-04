@@ -14,6 +14,11 @@ namespace Cuture.Extensions.Modularity.Hosting
     {
         #region Public 字段
 
+        /// <summary>
+        /// HostBuilder 是否延时执行 ConfigureServices 的 key
+        /// </summary>
+        public const string HostBuilderDelayConfigureServicesPropertiesKey = "Cuture.Extensions.Modularity.HostBuilder.DelayConfigureServices";
+
         public const string HostBuilderPropertiesKey = "Cuture.Extensions.Modularity.Hosting.ModuleLoadContext";
 
         #endregion Public 字段
@@ -30,6 +35,26 @@ namespace Cuture.Extensions.Modularity.Hosting
             if (moduleSource is null)
             {
                 throw new ArgumentNullException(nameof(moduleSource));
+            }
+
+            //检查是否是延时执行 ConfigureServices 的HostBuilder，非延时执行的HostBuilder需要抛出异常，避免功能不正常
+            var isDelayConfigureServices = true;
+            if (!hostBuilder.Properties.TryGetValue(HostBuilderDelayConfigureServicesPropertiesKey, out var isDelayConfigureServicesObject)
+                || isDelayConfigureServicesObject is null)
+            {
+                var localCheckValue = false;
+                hostBuilder.ConfigureServices((_, _) => localCheckValue = true);
+                isDelayConfigureServices = !localCheckValue;
+                hostBuilder.Properties.Add(HostBuilderDelayConfigureServicesPropertiesKey, isDelayConfigureServices);
+            }
+            else
+            {
+                isDelayConfigureServices = (bool)isDelayConfigureServicesObject;
+            }
+
+            if (!isDelayConfigureServices)
+            {
+                throw new ModularityException("The hostBuilder invoke `ConfigureServices` every time at `LoadModule()`. Modular functions may not perform correctly. Please use `IServiceCollection.LoadModule*()` instead of `IHostBuilder.LoadModule*()`.");
             }
 
             if (hostBuilder.Properties.TryGetValue(HostBuilderPropertiesKey, out var storedLoadContext))
