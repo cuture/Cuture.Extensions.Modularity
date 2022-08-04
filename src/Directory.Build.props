@@ -29,7 +29,7 @@
 
   <!--Package Info-->
   <PropertyGroup>
-    <VersionPrefix>1.1.7</VersionPrefix>
+    <VersionPrefix>1.1.8</VersionPrefix>
 
     <PackageIdPrefix>Cuture.Extensions</PackageIdPrefix>
     <Authors>Stratos</Authors>
@@ -51,6 +51,6 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
   </ItemGroup>
 </Project>

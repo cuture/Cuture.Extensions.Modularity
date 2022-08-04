@@ -22,6 +22,7 @@ namespace UseHostSample
         {
             var services = context.Services;
             var configure = services.GetConfiguration();
+            var hostBuilder = services.GetRequiredHostBuilder();
 
             Console.WriteLine($"Current User: {configure["USERNAME"] ?? configure["USER"]}");
         }
