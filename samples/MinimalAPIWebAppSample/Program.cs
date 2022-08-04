@@ -20,7 +20,7 @@ services.AddObjectAccessor<IApplicationBuilder>();
 var module3Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleModule3.dll");
 var module5Directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
-//加载模块
+//加载模块(由于 WebApplicationBuilder 的特殊性，不能使用 `builder.Host` 进行模块加载)
 services.LoadModule<MinimalAPISampleModule>()
         .AddModuleFile(module3Path) //从文件加载
         .AddModuleDirectory(source =>

@@ -29,7 +29,7 @@
 
   <!--Package Info-->
   <PropertyGroup>
-    <VersionPrefix>1.1.10</VersionPrefix>
+    <VersionPrefix>1.1.11</VersionPrefix>
 
     <PackageIdPrefix>Cuture.Extensions</PackageIdPrefix>
     <Authors>Stratos</Authors>
