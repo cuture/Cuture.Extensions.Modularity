@@ -74,6 +74,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\PublishNugetPackage.yml = .github\workflows\PublishNugetPackage.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalAPIWebAppSample", "samples\MinimalAPIWebAppSample\MinimalAPIWebAppSample.csproj", "{73BCD7D4-A014-4208-9524-A68260E541E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{5EDF75EC-3EED-4D13-84F8-A360560D3A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EDF75EC-3EED-4D13-84F8-A360560D3A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EDF75EC-3EED-4D13-84F8-A360560D3A77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73BCD7D4-A014-4208-9524-A68260E541E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73BCD7D4-A014-4208-9524-A68260E541E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73BCD7D4-A014-4208-9524-A68260E541E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73BCD7D4-A014-4208-9524-A68260E541E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{5EDF75EC-3EED-4D13-84F8-A360560D3A77} = {34D59234-872F-4900-902D-ABF6641493D6}
 		{96BB1AAC-A62F-4C5E-BA8A-16732EA54FAA} = {45FE741F-8C30-42B3-A825-F7278DFF8656}
 		{F547B1D2-B8B4-4A1B-8E38-7047CE837F22} = {96BB1AAC-A62F-4C5E-BA8A-16732EA54FAA}
+		{73BCD7D4-A014-4208-9524-A68260E541E4} = {AA758B5B-A001-48CA-8F45-0BD0508235CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {423A7D36-CF8F-40EA-9BA2-D6FE3412D66E}

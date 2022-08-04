@@ -4,8 +4,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
-    
+
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <McrVersion>5.0.*</McrVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <McrVersion>6.0.*</McrVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +24,7 @@
     <ProjectReference Include="..\SampleModule3\SampleModule3.csproj" />
     <ProjectReference Include="..\SampleModule4\SampleModule4.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="..\SampleModule5\bin\$(ConfigurationName)\**\SampleModule5.???" Link="plugins\linked\%(RecursiveDir)\%(Filename)%(Extension)" >
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

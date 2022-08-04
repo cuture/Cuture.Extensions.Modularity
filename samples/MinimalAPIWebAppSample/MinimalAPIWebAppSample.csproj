@@ -2,13 +2,19 @@
   <Import Project="../sample_host_commom.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-    <DefineConstants>SlimStartup</DefineConstants>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Cuture.Extensions.Modularity.Hosting\Cuture.Extensions.Modularity.Hosting.csproj" />
   </ItemGroup>
+
 </Project>
