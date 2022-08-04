@@ -52,7 +52,12 @@ namespace Cuture.Extensions.Modularity.Hosting
                 hostBuilder.ConfigureServices((context, services) =>
                 {
                     services.AddObjectAccessor<IHostBuilderContainer>(new(hostBuilder));
-                    services.AddObjectAccessor<IConfigurationContainer>(new(context.Configuration));
+                    var hasConfiguration = services.GetConfiguration() is not null;
+                    var removeIConfigurationContainer = false;
+                    if (!hasConfiguration)
+                    {
+                        removeIConfigurationContainer = services.SetConfiguration(context.Configuration);
+                    }
 
                     try
                     {
@@ -70,7 +75,10 @@ namespace Cuture.Extensions.Modularity.Hosting
                     }
                     finally
                     {
-                        services.RemoveObjectAccessor<IConfigurationContainer>();
+                        if (removeIConfigurationContainer)
+                        {
+                            services.RemoveObjectAccessor<IConfigurationContainer>();
+                        }
                         services.RemoveObjectAccessor<IHostBuilderContainer>();
                     }
                 });

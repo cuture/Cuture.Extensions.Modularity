@@ -37,6 +37,34 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IConfiguration GetRequiredConfiguration(this IServiceCollection services) => services.GetConfiguration()
                                                                                                    ?? throw new InvalidOperationException($"Not found {nameof(IConfiguration)} in serviceCollection.");
 
+        /// <summary>
+        /// 将用于<see cref="GetConfiguration(IServiceCollection)"/>获取的<see cref="IConfiguration"/>添加到<paramref name="services"/>中
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns>是否为新添加</returns>
+        public static bool SetConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (services.TryGetObjectAccessor<IConfigurationContainer>(out var container)
+                && container is not null)
+            {
+                if (container.Value is null)
+                {
+                    container.Value = new(configuration);
+                }
+                else
+                {
+                    container.Value.Value = configuration;
+                }
+                return false;
+            }
+            else
+            {
+                services.AddObjectAccessor<IConfigurationContainer>(new(configuration));
+                return true;
+            }
+        }
+
         #endregion Public 方法
     }
 }
