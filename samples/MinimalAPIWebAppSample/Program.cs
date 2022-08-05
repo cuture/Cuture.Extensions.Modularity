@@ -1,3 +1,5 @@
+using Cuture.Extensions.Modularity;
+
 using MinimalAPIWebAppSample;
 
 using SampleModule2;
