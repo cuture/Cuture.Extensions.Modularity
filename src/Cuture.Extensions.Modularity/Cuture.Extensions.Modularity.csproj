@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>a library for modular develop based on Microsoft.Extensions.DependencyInjection. </Description>
+    <Description>a library for modular develop based on Microsoft.Extensions.DependencyInjection. 基于 Microsoft.Extensions.DependencyInjection 的模块化开发库。</Description>
 
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
