@@ -31,7 +31,7 @@ public abstract class AssemblyModuleSourceBase : TypeModuleSourceBase
                             ? InternalGetAssemblies().Where(AssemblyFilter)
                             : InternalGetAssemblies();
 
-        List<Type> types = new();
+        List<Type> types = [];
 
         foreach (var assembly in assemblies)
         {

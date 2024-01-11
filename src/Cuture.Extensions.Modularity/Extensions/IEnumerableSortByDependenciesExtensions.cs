@@ -25,8 +25,8 @@ public static class IEnumerableSortByDependenciesExtensions
             return Array.Empty<T>();
         }
 
-        List<T> sorted = new();
-        Dictionary<T, bool> visited = new();
+        List<T> sorted = [];
+        Dictionary<T, bool> visited = [];
 
         foreach (var item in source)
         {

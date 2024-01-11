@@ -4,8 +4,8 @@ internal sealed class HostBuilderModuleLoadContext
 {
     #region Private 字段
 
-    private readonly List<KeyValuePair<IModuleSource, Action<ModuleLoadOptions>?>> _moduleSources = new();
-    private readonly List<Action<ModuleLoadOptions>> _optionActions = new();
+    private readonly List<KeyValuePair<IModuleSource, Action<ModuleLoadOptions>?>> _moduleSources = [];
+    private readonly List<Action<ModuleLoadOptions>> _optionActions = [];
 
     #endregion Private 字段
 

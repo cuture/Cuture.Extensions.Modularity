@@ -25,10 +25,10 @@ public class AggregatedModuleDescriptorBuilder : IModuleDescriptorBuilder
     /// <inheritdoc cref="AggregatedModuleDescriptorBuilder"/>
     public AggregatedModuleDescriptorBuilder()
     {
-        _descriptorBuilders = new List<IModuleDescriptorBuilder>()
-        {
+        _descriptorBuilders =
+        [
             DefaultModuleDescriptorBuilder.Default
-        };
+        ];
     }
 
     #endregion Public 构造函数

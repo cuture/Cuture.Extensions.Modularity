@@ -33,7 +33,7 @@ public class DefaultOptionsBinder : IOptionsBinder
     public DefaultOptionsBinder(OptionsBindOptions options)
     {
         AutoBindOptions = options ?? throw new ArgumentNullException(nameof(options));
-        _optionsExtensionMethod = typeof(OptionsConfigurationServiceCollectionExtensions).GetMethod("Configure", new[] { typeof(IServiceCollection), typeof(IConfiguration) })!;
+        _optionsExtensionMethod = typeof(OptionsConfigurationServiceCollectionExtensions).GetMethod("Configure", [typeof(IServiceCollection), typeof(IConfiguration)])!;
     }
 
     #endregion Public 构造函数
@@ -43,12 +43,8 @@ public class DefaultOptionsBinder : IOptionsBinder
     /// <inheritdoc/>
     public virtual void BindOptionsInAssembly(IServiceCollection services, Assembly assembly)
     {
-        var configuration = services.GetConfiguration();
-
-        if (configuration is null)
-        {
-            throw new ModularityException($"Cannot auto bind options with out any {nameof(IConfiguration)} in {nameof(IServiceCollection)}");
-        }
+        var configuration = services.GetConfiguration()
+                            ?? throw new ModularityException($"Cannot auto bind options with out any {nameof(IConfiguration)} in {nameof(IServiceCollection)}");
 
         services.AddOptions();
 
@@ -105,12 +101,8 @@ public class DefaultOptionsBinder : IOptionsBinder
     /// <returns></returns>
     protected virtual IConfigurationSection GetOptionsConfiguration(IConfiguration configuration, Type optionsType)
     {
-        var targetConfigurationKey = GetOptionsConfiguretionSectionKey(optionsType);
-
-        if (targetConfigurationKey is null)
-        {
-            throw new ModularityException($"cannot auto find {nameof(IConfiguration)} for option type {optionsType}.cannot auto bind it.");
-        }
+        var targetConfigurationKey = GetOptionsConfiguretionSectionKey(optionsType)
+                                     ?? throw new ModularityException($"cannot auto find {nameof(IConfiguration)} for option type {optionsType}.cannot auto bind it.");
 
         var targetConfiguration = configuration.GetSection(targetConfigurationKey);
         return targetConfiguration;

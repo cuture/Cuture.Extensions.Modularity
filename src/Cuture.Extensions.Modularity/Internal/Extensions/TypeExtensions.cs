@@ -143,7 +143,7 @@ internal static class TypeExtensions
 
     #region MostLikelyDirectInterfaces
 
-    private static WeakReference<Type[]?> s_defaultExcludeTypes = new(null);
+    private static readonly WeakReference<Type[]?> s_defaultExcludeTypes = new(null);
 
     /// <summary>
     /// <inheritdoc cref="CutureExtensionsModularityTypeReflectionExtensions.GetMostLikelyDirectInterfaces"/>

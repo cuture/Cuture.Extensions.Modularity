@@ -20,7 +20,7 @@ public abstract class AsyncCountableModuleBase : AsyncAppModule
 
     #region Public 属性
 
-    public List<KeyValuePair<string, string>> MethodLog { get; set; } = new();
+    public List<KeyValuePair<string, string>> MethodLog { get; set; } = [];
 
     #endregion Public 属性
 

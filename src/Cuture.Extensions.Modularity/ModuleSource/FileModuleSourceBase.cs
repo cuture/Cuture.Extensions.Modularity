@@ -34,7 +34,7 @@ public abstract class FileModuleSourceBase : AssemblyModuleSourceBase
                         ? InternalGetFiles().Where(FileFilter)
                         : InternalGetFiles();
 
-        List<Assembly> assemblies = new();
+        List<Assembly> assemblies = [];
 
         foreach (var file in files)
         {

@@ -7,7 +7,7 @@ public class ModuleLoaderBuilder : IModuleLoaderBuilder
 {
     #region Private 字段
 
-    private readonly List<IModuleSource> _moduleSources = new();
+    private readonly List<IModuleSource> _moduleSources = [];
 
     #endregion Private 字段
 

@@ -9,7 +9,9 @@ public static class IModuleDescriptorMermaidExtensions
 {
     #region Mermaid
 
-    internal static readonly StringBuilder EmptyStringBuilder = new StringBuilder(0);
+    internal static readonly StringBuilder EmptyStringBuilder = new(0);
+
+    private static readonly char[] s_newLineSeparator = ['\r', '\n'];
 
     /// <summary>
     /// 根据已组织的多个模块描述，获取其 Mermaid 关系字符串，并移除重复路径
@@ -43,7 +45,7 @@ public static class IModuleDescriptorMermaidExtensions
     /// <returns></returns>
     public static string ToMermaidString(this IModuleDescriptor organizedModuleDescriptor, bool displayFullTypeName = false)
     {
-        HashSet<IModuleDescriptor> processed = new();
+        HashSet<IModuleDescriptor> processed = [];
         return organizedModuleDescriptor.InternalToMermaidString(processed, displayFullTypeName ? type => type.FullName : type => type.Name).ToString();
     }
 
@@ -55,7 +57,7 @@ public static class IModuleDescriptorMermaidExtensions
     /// <returns></returns>
     public static string ToMermaidString(this IModuleDescriptor organizedModuleDescriptor, Func<Type, string> getTypeDisplayNameFunc)
     {
-        HashSet<IModuleDescriptor> processed = new();
+        HashSet<IModuleDescriptor> processed = [];
         return organizedModuleDescriptor.InternalToMermaidString(processed, getTypeDisplayNameFunc).ToString();
     }
 
@@ -92,7 +94,7 @@ public static class IModuleDescriptorMermaidExtensions
     /// <returns></returns>
     internal static string RemoveMermaidDuplicatePaths(string content)
     {
-        var lines = content.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
+        var lines = content.Split(s_newLineSeparator, StringSplitOptions.RemoveEmptyEntries).Distinct();
 
         return string.Join(Environment.NewLine, lines);
     }

@@ -10,7 +10,7 @@ public abstract class StoreableContextBase
     /// <summary>
     /// 储存的传递项
     /// </summary>
-    public Dictionary<string, object?> Items { get; protected set; } = new();
+    public Dictionary<string, object?> Items { get; protected set; } = [];
 
     #endregion Public 属性
 

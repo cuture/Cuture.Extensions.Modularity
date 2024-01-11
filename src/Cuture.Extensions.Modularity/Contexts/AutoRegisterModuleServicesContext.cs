@@ -14,7 +14,7 @@ public class AutoRegisterModuleServicesContext
     /// <summary>
     /// 已处理的程序集
     /// </summary>
-    public HashSet<Assembly> ProcessedAssemblies { get; } = new HashSet<Assembly>();
+    public HashSet<Assembly> ProcessedAssemblies { get; } = [];
 
     /// <summary>
     ///

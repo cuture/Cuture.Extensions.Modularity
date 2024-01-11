@@ -42,7 +42,7 @@ public abstract class TypeModuleSourceBase : IModuleSource
     {
         var descriptorBuilder = DescriptorBuilder ?? DefaultModuleDescriptorBuilder.Default;
 
-        List<Type> modules = new();
+        List<Type> modules = [];
 
         foreach (var type in types)
         {

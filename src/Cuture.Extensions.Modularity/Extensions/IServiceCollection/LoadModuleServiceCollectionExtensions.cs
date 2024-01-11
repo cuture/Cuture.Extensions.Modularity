@@ -195,7 +195,7 @@ public static class LoadModuleServiceCollectionExtensions
         return moduleLoaderBuilder;
     }
 
-    private static IModuleLoaderBuilder InternalInitModuleLoaderBuilder(this IServiceCollection services, Action<ModuleLoadOptions>? optionAction)
+    private static ModuleLoaderBuilder InternalInitModuleLoaderBuilder(this IServiceCollection services, Action<ModuleLoadOptions>? optionAction)
     {
         if (services.GetSingletonServiceInstance<IModulesBootstrapper>() is IModulesBootstrapper modulesBootstrapper
             && modulesBootstrapper != null)

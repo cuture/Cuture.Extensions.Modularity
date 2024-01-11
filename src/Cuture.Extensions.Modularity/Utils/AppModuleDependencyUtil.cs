@@ -15,7 +15,7 @@ public static class AppModuleDependencyUtil
     /// <returns></returns>
     public static List<IModuleDescriptor> FindAllDependedModuleDescriptors(Type moduleType, IModuleDescriptorBuilder? descriptorBuilder = null)
     {
-        Dictionary<Type, IModuleDescriptor> moduleDescriptorMap = new();
+        Dictionary<Type, IModuleDescriptor> moduleDescriptorMap = [];
 
         CollectModuleDescriptors(moduleDescriptorMap, moduleType, descriptorBuilder ?? DefaultModuleDescriptorBuilder.Default);
 
@@ -31,7 +31,7 @@ public static class AppModuleDependencyUtil
     public static List<IModuleDescriptor> FindAllDependedModuleDescriptors(IEnumerable<Type> moduleTypes, IModuleDescriptorBuilder? descriptorBuilder = null)
     {
         descriptorBuilder ??= DefaultModuleDescriptorBuilder.Default;
-        Dictionary<Type, IModuleDescriptor> moduleDescriptorMap = new();
+        Dictionary<Type, IModuleDescriptor> moduleDescriptorMap = [];
 
         foreach (var moduleType in moduleTypes)
         {

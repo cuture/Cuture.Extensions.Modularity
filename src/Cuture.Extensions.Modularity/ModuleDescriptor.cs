@@ -5,8 +5,8 @@ public class ModuleDescriptor : IModuleDescriptor
 {
     #region Private 字段
 
-    private List<IModuleDescriptor> _dependencies = new();
-    private List<IModuleDescriptor> _dependents = new();
+    private List<IModuleDescriptor> _dependencies = [];
+    private List<IModuleDescriptor> _dependents = [];
 
     #endregion Private 字段
 

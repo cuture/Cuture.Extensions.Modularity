@@ -81,12 +81,8 @@ public static class InitializationModulesServiceProviderExtensions
     /// <returns></returns>
     public static async Task<IModulesBootstrapper> InitializationModulesWithOutHostLifetimeAsync(this IServiceProvider serviceProvider, IDictionary<string, object?>? items = null)
     {
-        var bootstrapper = serviceProvider.GetService<IModulesBootstrapper>();
-
-        if (bootstrapper is null)
-        {
-            throw new ModularityException($"must load modules first before initialization modules. please check module is loaded and {nameof(LoadModuleServiceCollectionExtensions.ModuleLoadComplete)} has been invoked.");
-        }
+        var bootstrapper = serviceProvider.GetService<IModulesBootstrapper>()
+                           ?? throw new ModularityException($"must load modules first before initialization modules. please check module is loaded and {nameof(LoadModuleServiceCollectionExtensions.ModuleLoadComplete)} has been invoked.");
 
         var initializationContext = new ApplicationInitializationContext(serviceProvider, items);
 

@@ -31,7 +31,7 @@ public class AggregatedModulesBootstrapInterceptor : IModulesBootstrapIntercepto
     {
         if (interceptors is null)
         {
-            _modulesBootstrapInterceptors = new List<IModulesBootstrapInterceptor>();
+            _modulesBootstrapInterceptors = [];
         }
         else
         {

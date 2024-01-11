@@ -16,7 +16,7 @@ public class AbpAdaptedServiceRegistrar : DefaultServiceRegistrar
 {
     private Volo.Abp.DependencyInjection.DefaultConventionalRegistrar _defaultConventionalRegistrar = new();
 
-    private readonly HashSet<Assembly> _processedAssemblies = new HashSet<Assembly>();
+    private readonly HashSet<Assembly> _processedAssemblies = [];
 
     public override void AddAssembly(IServiceCollection services, Assembly assembly)
     {

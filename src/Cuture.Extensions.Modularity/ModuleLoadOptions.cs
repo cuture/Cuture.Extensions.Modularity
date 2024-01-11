@@ -25,11 +25,7 @@ public class ModuleLoadOptions
     {
         get
         {
-            if (_bootstrapOptions is null)
-            {
-                _bootstrapOptions = new ModulesBootstrapOptions();
-            }
-            return _bootstrapOptions;
+            return _bootstrapOptions ??= new ModulesBootstrapOptions();
         }
         set => _bootstrapOptions = value;
     }
@@ -37,7 +33,7 @@ public class ModuleLoadOptions
     /// <summary>
     /// <inheritdoc cref="IModulesBootstrapInterceptor"/>列表
     /// </summary>
-    public List<IModulesBootstrapInterceptor> ModulesBootstrapInterceptors { get; } = new List<IModulesBootstrapInterceptor>();
+    public List<IModulesBootstrapInterceptor> ModulesBootstrapInterceptors { get; } = [];
 
     #endregion Public 属性
 }

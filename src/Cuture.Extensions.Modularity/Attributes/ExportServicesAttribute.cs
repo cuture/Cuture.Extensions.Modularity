@@ -127,7 +127,7 @@ public class ExportServicesAttribute : Attribute, IExportServicesProvider
             }
             var types = targetType.GetMostLikelyDirectInterfacesExcludeDefaults()?.ToArray();
             if (types is null
-                || !types.Any())
+                || types.Length == 0)
             {
                 if (targetType.GetInterfaces().IsNullOrEmpty())
                 {

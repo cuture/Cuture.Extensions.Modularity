@@ -25,7 +25,7 @@ public class ApplicationInitializationContext : StoreableContextBase
     {
         ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         Items = items is null
-                    ? new Dictionary<string, object?>()
+                    ? []
                     : new Dictionary<string, object?>(items);
     }
 
