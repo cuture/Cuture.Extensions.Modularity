@@ -2,67 +2,62 @@
 
 using System;
 using System.IO;
-using System.Threading;
-
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Hosting;
 using SampleModule2;
-
 using SampleModule4;
 
-namespace DirectUseDIContainerSample
+namespace DirectUseDIContainerSample;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            var module3Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleModule3.dll");
-            var module5Directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+        var module3Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleModule3.dll");
+        var module5Directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
-            var services = new ServiceCollection();
+        var services = new ServiceCollection();
 
-            //加载模块
-            services.AddSingleton<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build())
-                    .LoadModule<DIContainerSampleModule>()
-                    .AddModuleFile(module3Path) //从文件加载
-                    .AddModuleDirectory(source =>   //从文件夹加载
-                    {
-                        source.SearchDepth = 5;    //设置文件夹搜索深度
-                    }, module5Directory)
-                    //.AutoBindModuleOptions(options => options.UseFullNamespaceAsPath = false)
-                    //.AutoBindModuleOptions(options => options.PathPrefix = "Prefixed:CFG")
-                    //.AutoBindModuleOptions(options => { options.UseFullNamespaceAsPath = false; options.PathPrefix = "Prefixed:CFG"; })
-                    .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
-                    .ModuleLoadComplete();
-
-            using (var serviceProvider = services.BuildServiceProvider())
-            {
-                //初始化模块
-                serviceProvider.InitializationModulesWithOutHostLifetime();
-
-                for (int i = 0; i < 3; i++)
+        //加载模块
+        services.AddSingleton<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build())
+                .LoadModule<DIContainerSampleModule>()
+                .AddModuleFile(module3Path) //从文件加载
+                .AddModuleDirectory(source =>   //从文件夹加载
                 {
-                    Console.WriteLine($"------------- {i} -------------");
-                    using (var serviceScope = serviceProvider.CreateScope())
-                    {
-                        var accessCounter = serviceScope.ServiceProvider.GetRequiredService<IAccessCounter>();
-                        accessCounter.Add();
+                    source.SearchDepth = 5;    //设置文件夹搜索深度
+                }, module5Directory)
+                //.AutoBindModuleOptions(options => options.UseFullNamespaceAsPath = false)
+                //.AutoBindModuleOptions(options => options.PathPrefix = "Prefixed:CFG")
+                //.AutoBindModuleOptions(options => { options.UseFullNamespaceAsPath = false; options.PathPrefix = "Prefixed:CFG"; })
+                .AutoBindModuleOptions()    //自动使用 IConfiguration 绑定标记了 AutoRegisterServicesInAssemblyAttribute 的模块中继承了 IOptions<TOptions> 的类
+                .ModuleLoadComplete();
 
-                        Console.WriteLine($"hello: {serviceScope.ServiceProvider.GetRequiredService<IHelloable>().SayHello()}");
-                        Console.WriteLine($"accessCount: {accessCounter.Count}");
-                        Console.WriteLine($"scopedRandom1: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
-                        Console.WriteLine($"scopedRandom2: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
-                        Console.WriteLine($"random1: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
-                        Console.WriteLine($"random3: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
-                    }
-                    Console.WriteLine("\r\n");
+        using (var serviceProvider = services.BuildServiceProvider())
+        {
+            //初始化模块
+            serviceProvider.InitializationModulesWithOutHostLifetime();
+
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine($"------------- {i} -------------");
+                using (var serviceScope = serviceProvider.CreateScope())
+                {
+                    var accessCounter = serviceScope.ServiceProvider.GetRequiredService<IAccessCounter>();
+                    accessCounter.Add();
+
+                    Console.WriteLine($"hello: {serviceScope.ServiceProvider.GetRequiredService<IHelloable>().SayHello()}");
+                    Console.WriteLine($"accessCount: {accessCounter.Count}");
+                    Console.WriteLine($"scopedRandom1: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
+                    Console.WriteLine($"scopedRandom2: {serviceScope.ServiceProvider.GetRequiredService<IRequestRandomProvider>().Random()}");
+                    Console.WriteLine($"random1: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
+                    Console.WriteLine($"random3: {serviceScope.ServiceProvider.GetRequiredService<IRandomProvider>().Random()}");
                 }
-
-                //关闭模块
-                serviceProvider.ShutdownModules();
+                Console.WriteLine("\r\n");
             }
+
+            //关闭模块
+            serviceProvider.ShutdownModules();
         }
     }
 }

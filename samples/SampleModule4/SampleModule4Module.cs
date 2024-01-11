@@ -6,28 +6,27 @@ using Cuture.Extensions.Modularity;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SampleModule4
+namespace SampleModule4;
+
+public class SampleModule4Module : AppModule, IOnPostApplicationInitializationAsync
 {
-    public class SampleModule4Module : AppModule, IOnPostApplicationInitializationAsync
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            context.Services.AddSingleton<IHelloable, Module4Helloable>();
-        }
+        context.Services.AddSingleton<IHelloable, Module4Helloable>();
+    }
 
-        public async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
+    public async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
+    {
+        var helloable = context.ServiceProvider.GetRequiredService<IHelloable>();
+        if (helloable is Module4Helloable module4Helloable)
         {
-            var helloable = context.ServiceProvider.GetRequiredService<IHelloable>();
-            if (helloable is Module4Helloable module4Helloable)
-            {
-                await module4Helloable.InitAsync();
-            }
+            await module4Helloable.InitAsync();
         }
+    }
 
-        public override void OnApplicationShutdown(ApplicationShutdownContext context)
-        {
-            Console.WriteLine($"Wait {nameof(SampleModule4Module)} a moment.");
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-        }
+    public override void OnApplicationShutdown(ApplicationShutdownContext context)
+    {
+        Console.WriteLine($"Wait {nameof(SampleModule4Module)} a moment.");
+        Thread.Sleep(TimeSpan.FromSeconds(1));
     }
 }

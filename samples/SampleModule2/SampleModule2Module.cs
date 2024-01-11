@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Cuture.Extensions.Modularity;
 
@@ -7,20 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 using SampleModule4;
 
-namespace SampleModule2
+namespace SampleModule2;
+
+[DependsOn(
+    typeof(SampleModule4.SampleModule4Module)
+    )]
+public class SampleModule2Module : AppModule, IOnPostApplicationInitializationAsync
 {
-    [DependsOn(
-        typeof(SampleModule4.SampleModule4Module)
-        )]
-    public class SampleModule2Module : AppModule, IOnPostApplicationInitializationAsync
+    public async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
     {
-        public async Task OnPostApplicationInitializationAsync(ApplicationInitializationContext context)
+        var helloable = context.ServiceProvider.GetRequiredService<IHelloable>();
+        if (helloable is Module2Helloable module2Helloable)
         {
-            var helloable = context.ServiceProvider.GetRequiredService<IHelloable>();
-            if (helloable is Module2Helloable module2Helloable)
-            {
-                await module2Helloable.InitAsync();
-            }
+            await module2Helloable.InitAsync();
         }
     }
 }

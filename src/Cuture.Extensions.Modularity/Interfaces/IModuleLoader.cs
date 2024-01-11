@@ -1,18 +1,17 @@
-﻿namespace Cuture.Extensions.Modularity
+﻿namespace Cuture.Extensions.Modularity;
+
+/// <summary>
+/// 模块加载器
+/// </summary>
+public interface IModuleLoader
 {
+    #region Public 方法
+
     /// <summary>
-    /// 模块加载器
+    /// 构建<see cref="IModuleDescriptor"/>
     /// </summary>
-    public interface IModuleLoader
-    {
-        #region Public 方法
+    /// <returns></returns>
+    IModulesBootstrapper BuildBootstrapper();
 
-        /// <summary>
-        /// 构建<see cref="IModuleDescriptor"/>
-        /// </summary>
-        /// <returns></returns>
-        IModulesBootstrapper BuildBootstrapper();
-
-        #endregion Public 方法
-    }
+    #endregion Public 方法
 }

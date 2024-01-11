@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Cuture.Extensions.Modularity;
 
-using Cuture.Extensions.Modularity;
+namespace SampleModule3;
 
-namespace SampleModule3
+public class SampleModule3Module : AppModule
 {
-    public class SampleModule3Module : AppModule
-    {
 
-    }
 }

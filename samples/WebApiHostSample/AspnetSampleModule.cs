@@ -9,73 +9,72 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace WebApiHostSample
+namespace WebApiHostSample;
+
+[DependsOn(
+    typeof(SampleModule2.SampleModule2Module),
+    typeof(SampleModule1.SampleModule1Module)
+    )]
+public class AspnetSampleModule : AppModule
 {
-    [DependsOn(
-        typeof(SampleModule2.SampleModule2Module),
-        typeof(SampleModule1.SampleModule1Module)
-        )]
-    public class AspnetSampleModule : AppModule
-    {
 #if SlimStartup
 
-        public override void ConfigureServices(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        Console.WriteLine("Slim Startup Class ConfigureServices");
+
+        var services = context.Services;
+        var configure = services.GetConfiguration();
+
+        Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {configure["ASPNETCORE_ENVIRONMENT"]}");
+
+        services.AddControllers();
+    }
+
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    {
+        Console.WriteLine("Slim Startup Class OnApplicationInitialization");
+
+        var serviceProvider = context.ServiceProvider;
+
+        //使用ObjectAccessor获取IApplicationBuilder
+        var app = serviceProvider.GetObjectAccessorValue<IApplicationBuilder>();
+        //使用初始化上下文获取IApplicationBuilder
+        app = context.Value<IApplicationBuilder>("app");
+
+        var env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+
+        if (env.IsDevelopment())
         {
-            Console.WriteLine("Slim Startup Class ConfigureServices");
-
-            var services = context.Services;
-            var configure = services.GetConfiguration();
-
-            Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {configure["ASPNETCORE_ENVIRONMENT"]}");
-
-            services.AddControllers();
+            app.UseDeveloperExceptionPage();
         }
 
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            Console.WriteLine("Slim Startup Class OnApplicationInitialization");
-
-            var serviceProvider = context.ServiceProvider;
-
-            //使用ObjectAccessor获取IApplicationBuilder
-            var app = serviceProvider.GetObjectAccessorValue<IApplicationBuilder>();
-            //使用初始化上下文获取IApplicationBuilder
-            app = context.Value<IApplicationBuilder>("app");
-
-            var env = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+            endpoints.MapControllers();
+        });
+    }
 
 #else
 
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            Console.WriteLine("Normal Startup Class ConfigureServices");
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        Console.WriteLine("Normal Startup Class ConfigureServices");
 
-            var services = context.Services;
-            var configure = services.GetConfiguration();
+        var services = context.Services;
+        var configure = services.GetConfiguration();
 
-            Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {configure["ASPNETCORE_ENVIRONMENT"]}");
-        }
+        Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {configure["ASPNETCORE_ENVIRONMENT"]}");
+    }
 
-        public override void OnApplicationInitialization(ApplicationInitializationContext context)
-        {
-            Console.WriteLine("Normal Startup Class OnApplicationInitialization");
-        }
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    {
+        Console.WriteLine("Normal Startup Class OnApplicationInitialization");
+    }
 
 #endif
-    }
 }

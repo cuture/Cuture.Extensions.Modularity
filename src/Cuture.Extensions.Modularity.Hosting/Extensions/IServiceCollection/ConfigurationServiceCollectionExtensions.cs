@@ -1,6 +1,4 @@
-﻿using System;
-
-using Cuture.Extensions.Modularity.Internal;
+﻿using Cuture.Extensions.Modularity.Internal;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

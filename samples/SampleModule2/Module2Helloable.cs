@@ -11,32 +11,31 @@ using SampleModule2.Options.Hellos;
 
 using SampleModule4;
 
-namespace SampleModule2
+namespace SampleModule2;
+
+//此时将会替换模块4中的Module4Helloable
+[ExportSingletonServices(AddDIMode.Replace, typeof(IHelloable))]
+public class Module2Helloable : IHelloable
 {
-    //此时将会替换模块4中的Module4Helloable
-    [ExportSingletonServices(AddDIMode.Replace, typeof(IHelloable))]
-    public class Module2Helloable : IHelloable
+    private string _assemblyName;
+    private readonly HelloOptions _helloOptions;
+    private readonly HelloOptions2 _helloOptions2;
+
+    public Module2Helloable(IOptions<HelloOptions> helloOptions, IOptions<HelloOptions2> helloOptions2)
     {
-        private string _assemblyName;
-        private readonly HelloOptions _helloOptions;
-        private readonly HelloOptions2 _helloOptions2;
+        _helloOptions = helloOptions.Value;
+        _helloOptions2 = helloOptions2.Value;
+    }
 
-        public Module2Helloable(IOptions<HelloOptions> helloOptions, IOptions<HelloOptions2> helloOptions2)
-        {
-            _helloOptions = helloOptions.Value;
-            _helloOptions2 = helloOptions2.Value;
-        }
+    public string SayHello()
+    {
+        return $"Hello. 【Options:{_helloOptions.Content}】【Options2:{_helloOptions2.Content}】。这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
+    }
 
-        public string SayHello()
-        {
-            return $"Hello. 【Options:{_helloOptions.Content}】【Options2:{_helloOptions2.Content}】。这里替换了其它的{nameof(IHelloable)} . 这里是 {_assemblyName}";
-        }
-
-        public async Task InitAsync()
-        {
-            Console.WriteLine($"Init {nameof(Module2Helloable)}");
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            _assemblyName = typeof(Module2Helloable).Assembly.GetName().Name;
-        }
+    public async Task InitAsync()
+    {
+        Console.WriteLine($"Init {nameof(Module2Helloable)}");
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        _assemblyName = typeof(Module2Helloable).Assembly.GetName().Name;
     }
 }

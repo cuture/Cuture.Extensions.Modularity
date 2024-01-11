@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.Options;
 
-using Microsoft.Extensions.Options;
+namespace SampleModule2;
 
-namespace SampleModule2
+public class HelloOptions : IOptions<HelloOptions>
 {
-    public class HelloOptions : IOptions<HelloOptions>
-    {
-        public string Content { get; set; }
+    public string Content { get; set; }
 
-        public HelloOptions Value => this;
-    }
+    public HelloOptions Value => this;
 }

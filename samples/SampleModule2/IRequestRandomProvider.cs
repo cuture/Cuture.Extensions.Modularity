@@ -1,7 +1,6 @@
-﻿namespace SampleModule2
+﻿namespace SampleModule2;
+
+public interface IRequestRandomProvider
 {
-    public interface IRequestRandomProvider
-    {
-        int Random();
-    }
+    int Random();
 }

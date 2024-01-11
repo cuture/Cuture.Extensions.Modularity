@@ -3,22 +3,21 @@
 using System;
 using System.Threading.Tasks;
 
-namespace SampleModule4
+namespace SampleModule4;
+
+public class Module4Helloable : IHelloable
 {
-    public class Module4Helloable : IHelloable
+    private string _assemblyFullName;
+
+    public string SayHello()
     {
-        private string _assemblyFullName;
+        return $"Hello there is {_assemblyFullName}";
+    }
 
-        public string SayHello()
-        {
-            return $"Hello there is {_assemblyFullName}";
-        }
-
-        public async Task InitAsync()
-        {
-            Console.WriteLine($"Init {nameof(Module4Helloable)}");
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            _assemblyFullName = typeof(Module4Helloable).Assembly.FullName;
-        }
+    public async Task InitAsync()
+    {
+        Console.WriteLine($"Init {nameof(Module4Helloable)}");
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        _assemblyFullName = typeof(Module4Helloable).Assembly.FullName;
     }
 }

@@ -4,26 +4,25 @@ using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DependencyInjection.Modularity.Test.Loads
-{
-    [TestClass]
-    public class LoadAsyncModuleTest : LoadTestBase
-    {
-        [TestMethod]
-        [DataRow(typeof(ChaosDependsModuleOrigin1Async), typeof(ChaosDependsModuleOrigin2Async), typeof(ChaosDependsModuleStandard1Async), typeof(ChaosDependsModuleStandard2Async), typeof(ChaosDependsModuleStandard3Async))]  //Chaos
-        [DataRow(typeof(ChildDependsModule1Async), typeof(ChildDependsModule3Async), typeof(ChildDependsModule5Async), typeof(ChildDependsModule7Async), typeof(ChildDependsModule9Async))]  //Child
-        [DataRow(typeof(MultiLinkSingleDestinationDependsModuleRoute1_StartAsync), typeof(MultiLinkSingleDestinationDependsModuleRoute2_StartAsync), typeof(MultiLinkSingleDestinationDependsModuleRoute3_StartAsync))] //MultiLinkSingleDestination
-        [DataRow(typeof(NoneDependsModuleAsync))] //NoneDepends
-        [DataRow(typeof(ParallelDependsModule1Async), typeof(ParallelDependsModule2Async))] //Parallel
-        [DataRow(typeof(SingleDependsModuleAsync))] //SingleLayer
-        [DataRow(typeof(SingleLinkDependsModuleAsync))] //SingleLink
-        [DataRow(typeof(SingleStartMultiLinkDependsModuleAsync))] //SingleStartMultiLink
-        public void Check(params Type[] types)
-        {
-            LoadInitModules(types);
-            ShutdownModules();
+namespace DependencyInjection.Modularity.Test.Loads;
 
-            AutoCheckModuleConfigureOrder(types);
-        }
+[TestClass]
+public class LoadAsyncModuleTest : LoadTestBase
+{
+    [TestMethod]
+    [DataRow(typeof(ChaosDependsModuleOrigin1Async), typeof(ChaosDependsModuleOrigin2Async), typeof(ChaosDependsModuleStandard1Async), typeof(ChaosDependsModuleStandard2Async), typeof(ChaosDependsModuleStandard3Async))]  //Chaos
+    [DataRow(typeof(ChildDependsModule1Async), typeof(ChildDependsModule3Async), typeof(ChildDependsModule5Async), typeof(ChildDependsModule7Async), typeof(ChildDependsModule9Async))]  //Child
+    [DataRow(typeof(MultiLinkSingleDestinationDependsModuleRoute1_StartAsync), typeof(MultiLinkSingleDestinationDependsModuleRoute2_StartAsync), typeof(MultiLinkSingleDestinationDependsModuleRoute3_StartAsync))] //MultiLinkSingleDestination
+    [DataRow(typeof(NoneDependsModuleAsync))] //NoneDepends
+    [DataRow(typeof(ParallelDependsModule1Async), typeof(ParallelDependsModule2Async))] //Parallel
+    [DataRow(typeof(SingleDependsModuleAsync))] //SingleLayer
+    [DataRow(typeof(SingleLinkDependsModuleAsync))] //SingleLink
+    [DataRow(typeof(SingleStartMultiLinkDependsModuleAsync))] //SingleStartMultiLink
+    public void Check(params Type[] types)
+    {
+        LoadInitModules(types);
+        ShutdownModules();
+
+        AutoCheckModuleConfigureOrder(types);
     }
 }

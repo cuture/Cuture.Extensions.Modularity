@@ -1,7 +1,4 @@
-﻿
-using Cuture.Extensions.Modularity;
-
-namespace DependencyInjection.Modularity.Test
+﻿namespace DependencyInjection.Modularity.Test
 {
     public class MultiLinkDependsModuleRoute2_5 : CountableModuleBase
     {

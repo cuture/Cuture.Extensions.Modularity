@@ -2,22 +2,21 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cuture.Extensions.Modularity
+namespace Cuture.Extensions.Modularity;
+
+/// <summary>
+/// 选项绑定器
+/// </summary>
+public interface IOptionsBinder
 {
+    #region Public 方法
+
     /// <summary>
-    /// 选项绑定器
+    /// 绑定程序集内的Options类
     /// </summary>
-    public interface IOptionsBinder
-    {
-        #region Public 方法
+    /// <param name="services"></param>
+    /// <param name="assembly"></param>
+    void BindOptionsInAssembly(IServiceCollection services, Assembly assembly);
 
-        /// <summary>
-        /// 绑定程序集内的Options类
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="assembly"></param>
-        void BindOptionsInAssembly(IServiceCollection services, Assembly assembly);
-
-        #endregion Public 方法
-    }
+    #endregion Public 方法
 }

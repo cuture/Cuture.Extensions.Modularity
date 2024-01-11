@@ -1,46 +1,43 @@
-﻿using System.Collections.Generic;
+﻿namespace Cuture.Extensions.Modularity;
 
-namespace Cuture.Extensions.Modularity
+/// <summary>
+/// 模块加载选项
+/// </summary>
+public class ModuleLoadOptions
 {
+    #region Private 字段
+
+    private ModulesBootstrapOptions? _bootstrapOptions;
+
+    #endregion Private 字段
+
+    #region Public 属性
+
     /// <summary>
-    /// 模块加载选项
+    /// 将模块注册到DI中
     /// </summary>
-    public class ModuleLoadOptions
+    public bool AddModuleAsService { get; set; } = false;
+
+    /// <summary>
+    /// <inheritdoc cref="ModulesBootstrapOptions"/>
+    /// </summary>
+    public ModulesBootstrapOptions BootstrapOptions
     {
-        #region Private 字段
-
-        private ModulesBootstrapOptions? _bootstrapOptions;
-
-        #endregion Private 字段
-
-        #region Public 属性
-
-        /// <summary>
-        /// 将模块注册到DI中
-        /// </summary>
-        public bool AddModuleAsService { get; set; } = false;
-
-        /// <summary>
-        /// <inheritdoc cref="ModulesBootstrapOptions"/>
-        /// </summary>
-        public ModulesBootstrapOptions BootstrapOptions
+        get
         {
-            get
+            if (_bootstrapOptions is null)
             {
-                if (_bootstrapOptions is null)
-                {
-                    _bootstrapOptions = new ModulesBootstrapOptions();
-                }
-                return _bootstrapOptions;
+                _bootstrapOptions = new ModulesBootstrapOptions();
             }
-            set => _bootstrapOptions = value;
+            return _bootstrapOptions;
         }
-
-        /// <summary>
-        /// <inheritdoc cref="IModulesBootstrapInterceptor"/>列表
-        /// </summary>
-        public List<IModulesBootstrapInterceptor> ModulesBootstrapInterceptors { get; } = new List<IModulesBootstrapInterceptor>();
-
-        #endregion Public 属性
+        set => _bootstrapOptions = value;
     }
+
+    /// <summary>
+    /// <inheritdoc cref="IModulesBootstrapInterceptor"/>列表
+    /// </summary>
+    public List<IModulesBootstrapInterceptor> ModulesBootstrapInterceptors { get; } = new List<IModulesBootstrapInterceptor>();
+
+    #endregion Public 属性
 }

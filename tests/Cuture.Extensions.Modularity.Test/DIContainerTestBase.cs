@@ -3,17 +3,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DependencyInjection.Modularity.Test
-{
-    [TestClass]
-    public abstract class DIContainerTestBase
-    {
-        protected IServiceCollection Services { get; set; }
+namespace DependencyInjection.Modularity.Test;
 
-        [TestInitialize]
-        public virtual void InitDIContainer()
-        {
-            Services = new ServiceCollection();
-        }
+[TestClass]
+public abstract class DIContainerTestBase
+{
+    protected IServiceCollection Services { get; set; }
+
+    [TestInitialize]
+    public virtual void InitDIContainer()
+    {
+        Services = new ServiceCollection();
     }
 }

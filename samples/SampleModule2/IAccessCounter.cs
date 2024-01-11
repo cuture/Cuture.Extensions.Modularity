@@ -1,9 +1,8 @@
-﻿namespace SampleModule2
-{
-    public interface IAccessCounter
-    {
-        long Count { get; }
+﻿namespace SampleModule2;
 
-        void Add();
-    }
+public interface IAccessCounter
+{
+    long Count { get; }
+
+    void Add();
 }

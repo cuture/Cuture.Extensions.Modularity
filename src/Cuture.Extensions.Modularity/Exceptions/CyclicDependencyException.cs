@@ -1,27 +1,26 @@
-﻿namespace System
+﻿namespace System;
+
+/// <summary>
+/// 循环依赖异常
+/// </summary>
+public class CyclicDependencyException : Exception
 {
+    #region Public 属性
+
     /// <summary>
-    /// 循环依赖异常
+    /// 发现循环依赖的对象
     /// </summary>
-    public class CyclicDependencyException : Exception
+    public object Item { get; set; }
+
+    #endregion Public 属性
+
+    #region Public 构造函数
+
+    /// <inheritdoc cref="CyclicDependencyException"/>
+    public CyclicDependencyException(object item)
     {
-        #region Public 属性
-
-        /// <summary>
-        /// 发现循环依赖的对象
-        /// </summary>
-        public object Item { get; set; }
-
-        #endregion Public 属性
-
-        #region Public 构造函数
-
-        /// <inheritdoc cref="CyclicDependencyException"/>
-        public CyclicDependencyException(object item)
-        {
-            Item = item;
-        }
-
-        #endregion Public 构造函数
+        Item = item;
     }
+
+    #endregion Public 构造函数
 }

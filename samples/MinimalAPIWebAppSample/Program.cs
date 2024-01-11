@@ -1,4 +1,4 @@
-using Cuture.Extensions.Modularity;
+ï»¿using Cuture.Extensions.Modularity;
 
 using MinimalAPIWebAppSample;
 
@@ -13,38 +13,38 @@ builder.Services.AddSwaggerGen();
 
 var services = builder.Services;
 
-// *** ÉèÖÃIConfiguration£¬ÒÔÊ¹ `services.GetConfiguration` ÄÜ¹»Õı³£¹¤×÷ ***
+// *** ï¿½ï¿½ï¿½ï¿½IConfigurationï¿½ï¿½ï¿½ï¿½Ê¹ `services.GetConfiguration` ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ***
 services.SetConfiguration(builder.Configuration);
 
-//Ìí¼ÓIApplicationBuilderµÄ·ÃÎÊÆ÷£¬ÒÔ±ã¿ÉÒÔÔÚÄ£¿éÖĞ½øĞĞ·ÃÎÊ
+//ï¿½ï¿½ï¿½ï¿½IApplicationBuilderï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ğ½ï¿½ï¿½Ğ·ï¿½ï¿½ï¿½
 services.AddObjectAccessor<IApplicationBuilder>();
 
 var module3Path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleModule3.dll");
 var module5Directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
-//¼ÓÔØÄ£¿é(ÓÉÓÚ WebApplicationBuilder µÄÌØÊâĞÔ£¬²»ÄÜÊ¹ÓÃ `builder.Host` ½øĞĞÄ£¿é¼ÓÔØ)
+//ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ WebApplicationBuilder ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ `builder.Host` ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½)
 services.LoadModule<MinimalAPISampleModule>()
-        .AddModuleFile(module3Path) //´ÓÎÄ¼ş¼ÓÔØ
+        .AddModuleFile(module3Path) //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
         .AddModuleDirectory(source =>
         {
-            source.SearchDepth = 5;    //ÉèÖÃÎÄ¼ş¼ĞËÑË÷Éî¶È
-        }, module5Directory)  //´ÓÎÄ¼ş¼Ğ¼ÓÔØ
-        .AutoBindModuleOptions();    //×Ô¶¯Ê¹ÓÃ IConfiguration °ó¶¨±ê¼ÇÁË AutoRegisterServicesInAssemblyAttribute µÄÄ£¿éÖĞ¼Ì³ĞÁË IOptions<TOptions> µÄÀà
+            source.SearchDepth = 5;    //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        }, module5Directory)  //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ğ¼ï¿½ï¿½ï¿½
+        .AutoBindModuleOptions();    //ï¿½Ô¶ï¿½Ê¹ï¿½ï¿½ IConfiguration ï¿½ó¶¨±ï¿½ï¿½ï¿½ï¿½ AutoRegisterServicesInAssemblyAttribute ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ğ¼Ì³ï¿½ï¿½ï¿½ IOptions<TOptions> ï¿½ï¿½ï¿½ï¿½
 
-await services.ModuleLoadCompleteAsync();   //Íê³É¼ÓÔØ
+await services.ModuleLoadCompleteAsync();   //ï¿½ï¿½É¼ï¿½ï¿½ï¿½
 
 var app = builder.Build();
 
-//ÎªIApplicationBuilderµÄ·ÃÎÊÆ÷ÉèÖÃÖµ£¬ÒÔ±ã¿ÉÒÔÔÚÄ£¿éÖĞ½øĞĞ·ÃÎÊ
+//ÎªIApplicationBuilderï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ğ½ï¿½ï¿½Ğ·ï¿½ï¿½ï¿½
 app.Services.SetObjectAccessorValue<IApplicationBuilder>(app);
 
-//½«IApplicationBuilder×÷Îª¼üapp£¬´«µİµ½³õÊ¼»¯ÉÏÏÂÎÄ
+//ï¿½ï¿½IApplicationBuilderï¿½ï¿½Îªï¿½ï¿½appï¿½ï¿½ï¿½ï¿½ï¿½İµï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 app.Services.InitializationModules("app", app);
 
-//³õÊ¼»¯Ä£¿é
+//ï¿½ï¿½Ê¼ï¿½ï¿½Ä£ï¿½ï¿½
 await app.InitializationModulesAsync();
 
-//ÒÆ³ı¶ÔÏó·ÃÎÊÆ÷µÄÖµ£¬Ê¹Æä²»ÔÙÒıÓÃIApplicationBuilder
+//ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Ê¹ï¿½ä²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IApplicationBuilder
 app.Services.RemoveObjectAccessorValue<IApplicationBuilder>();
 
 // Configure the HTTP request pipeline.

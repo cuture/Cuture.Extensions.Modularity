@@ -2,14 +2,13 @@
 
 using Cuture.Extensions.Modularity;
 
-namespace SampleModule5
+namespace SampleModule5;
+
+[DependsOn(typeof(SampleModule2.SampleModule2Module))]
+public class SampleModule5Module : IAppModule, IOnApplicationShutdown
 {
-    [DependsOn(typeof(SampleModule2.SampleModule2Module))]
-    public class SampleModule5Module : IAppModule, IOnApplicationShutdown
+    public void OnApplicationShutdown(ApplicationShutdownContext context)
     {
-        public void OnApplicationShutdown(ApplicationShutdownContext context)
-        {
-            Console.WriteLine("OnApplicationShutdown SampleModule5Module");
-        }
+        Console.WriteLine("OnApplicationShutdown SampleModule5Module");
     }
 }

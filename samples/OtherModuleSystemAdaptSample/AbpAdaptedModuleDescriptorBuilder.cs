@@ -4,48 +4,46 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using Cuture.Extensions.Modularity;
 
 using Volo.Abp.Modularity;
 
-namespace OtherModuleSystemAdaptSample
+namespace OtherModuleSystemAdaptSample;
+
+public class AbpAdaptedModuleDescriptorBuilder : DefaultModuleDescriptorBuilder
 {
-    public class AbpAdaptedModuleDescriptorBuilder : DefaultModuleDescriptorBuilder
+    public override bool CanCreate(Type type)
     {
-        public override bool CanCreate(Type type)
-        {
-            return base.CanCreate(type) || AbpModule.IsAbpModule(type);
-        }
+        return base.CanCreate(type) || AbpModule.IsAbpModule(type);
+    }
 
-        public override IModuleDescriptor Create(Type moduleType)
+    public override IModuleDescriptor Create(Type moduleType)
+    {
+        if (AbpModule.IsAbpModule(moduleType))
         {
-            if (AbpModule.IsAbpModule(moduleType))
-            {
-                var adaptedModuleType = typeof(AbpModuleAdapterModule<>).MakeGenericType(moduleType);
-                return new ModuleDescriptor(adaptedModuleType);
-            }
-            else
-            {
-                return base.Create(moduleType);
-            }
+            var adaptedModuleType = typeof(AbpModuleAdapterModule<>).MakeGenericType(moduleType);
+            return new ModuleDescriptor(adaptedModuleType);
         }
-
-        public override IEnumerable<Type> GetDependedModuleTypes(Type moduleType)
+        else
         {
-            if (AbpModule.IsAbpModule(moduleType))
-            {
-                return moduleType.GetCustomAttributes()
-                                 .OfType<Volo.Abp.Modularity.IDependedTypesProvider>()
-                                 .SelectMany(m => m.GetDependedTypes())
-                                 .Distinct()
-                                 .ToArray();
-            }
-            else
-            {
-                return base.GetDependedModuleTypes(moduleType);
-            }
+            return base.Create(moduleType);
+        }
+    }
+
+    public override IEnumerable<Type> GetDependedModuleTypes(Type moduleType)
+    {
+        if (AbpModule.IsAbpModule(moduleType))
+        {
+            return moduleType.GetCustomAttributes()
+                             .OfType<Volo.Abp.Modularity.IDependedTypesProvider>()
+                             .SelectMany(m => m.GetDependedTypes())
+                             .Distinct()
+                             .ToArray();
+        }
+        else
+        {
+            return base.GetDependedModuleTypes(moduleType);
         }
     }
 }
