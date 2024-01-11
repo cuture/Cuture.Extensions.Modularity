@@ -71,9 +71,9 @@ namespace OtherModuleSystemAdaptSample
                 {"key4","value4" },
             };
 
-            var jsonSerializer = serviceProvider.GetRequiredService<IJsonSerializerProvider>();
+            var jsonSerializer = serviceProvider.GetRequiredService<IJsonSerializer>();
 
-            Console.WriteLine($"这是使用abp的{nameof(IJsonSerializerProvider)}序列化的字符串: { jsonSerializer.Serialize(dic)}\r\n");
+            Console.WriteLine($"这是使用abp的{nameof(IJsonSerializer)}序列化的字符串: { jsonSerializer.Serialize(dic)}\r\n");
 
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;

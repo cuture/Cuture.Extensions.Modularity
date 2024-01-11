@@ -48,15 +48,19 @@ namespace DependencyInjection.Modularity.Test.ModuleSources
         protected virtual void AutoResolutionsModuleDllMissing()
         {
             //处理dll的加载
-            var dllFiles = Directory.EnumerateFiles("./plugins/linked/", "*.dll").ToArray();
+            var linkedDllFiles = Directory.EnumerateFiles("./plugins/linked/", "*.dll").ToArray();
+            var dllFiles = Directory.EnumerateFiles("./", "*.dll").ToArray();
             AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
             {
-                if (dllFiles.FirstOrDefault(m => m.Contains($"{e.Name.Split(',')[0]}.dll")) is string dllFile)
+                var dllName = $"{e.Name.Split(',')[0]}.dll";
+                var foundDllFile = linkedDllFiles.FirstOrDefault(m => m.Contains(dllName))
+                                   ?? dllFiles.FirstOrDefault(m => m.Contains(dllName));
+                if (File.Exists(foundDllFile))
                 {
-                    Console.WriteLine($"自动处理了关联Assembly加载：{e.Name} File：{dllFile}");
-                    dllFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dllFile);
-                    return Assembly.LoadFrom(dllFile);
+                    Console.WriteLine($"自动处理了关联Assembly加载：{e.Name} File：{foundDllFile}");
+                    return Assembly.LoadFrom(foundDllFile);
                 }
+
                 return null;
             };
         }

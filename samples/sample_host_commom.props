@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <Import Project="../runable_tfm.props" />
 
   <PropertyGroup>
@@ -9,11 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <McrVersion>5.0.*</McrVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <McrVersion>6.0.*</McrVersion>
+    <McrVersion>8.0.*</McrVersion>
   </PropertyGroup>
 
   <ItemGroup>
